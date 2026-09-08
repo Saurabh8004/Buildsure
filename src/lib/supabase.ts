@@ -28,13 +28,13 @@ if (supabaseUrl && !supabaseUrl.includes('.supabase.co')) {
   );
 }
 
-// Validate anon key format (should start with 'eyJ')
-if (supabaseAnonKey && !supabaseAnonKey.startsWith('eyJ')) {
+// Validate anon key format (should start with 'eyJ' or 'sb_publishable_')
+if (supabaseAnonKey && !supabaseAnonKey.startsWith('eyJ') && !supabaseAnonKey.startsWith('sb_publishable_')) {
   console.warn(
     '%c⚠️ Supabase anon key may be invalid',
     'color: orange; font-weight: bold;',
-    '\nAnon key should start with "eyJ" (JWT format)',
-    '\nCurrent key starts with:', supabaseAnonKey.substring(0, 10)
+    '\nAnon key should start with "eyJ" (JWT format) or "sb_publishable_" (publishable key format)',
+    '\nCurrent key starts with:', supabaseAnonKey.substring(0, 15)
   );
 }
 
@@ -63,6 +63,7 @@ export function isSupabaseConfigured(): boolean {
     'your-anon-key',
     'your-anon-key-here',
     'your-anon-public-key-here',
+    'your-supabase-publishable-key',
   ];
   
   if (placeholderUrls.includes(supabaseUrl)) return false;
@@ -71,19 +72,34 @@ export function isSupabaseConfigured(): boolean {
   // Check for valid URL format
   if (!supabaseUrl.includes('.supabase.co')) return false;
   
-  // Check for valid JWT format (anon keys start with eyJ)
-  if (!supabaseAnonKey.startsWith('eyJ')) return false;
+  // Check for valid key format (JWT format starting with eyJ OR publishable key starting with sb_publishable_)
+  const isValidKeyFormat = supabaseAnonKey.startsWith('eyJ') || supabaseAnonKey.startsWith('sb_publishable_');
+  if (!isValidKeyFormat) return false;
   
   return true;
 }
 
 // Get masked URL for display (never expose full URL in logs)
 export function getMaskedConfig() {
+  let maskedKey = 'NOT SET';
+  
+  if (supabaseAnonKey) {
+    if (supabaseAnonKey.startsWith('eyJ')) {
+      // Legacy JWT format
+      maskedKey = `${supabaseAnonKey.substring(0, 20)}...`;
+    } else if (supabaseAnonKey.startsWith('sb_publishable_')) {
+      // New publishable key format
+      maskedKey = `sb_publishable_${supabaseAnonKey.substring(15, 25)}...`;
+    } else {
+      maskedKey = 'INVALID FORMAT';
+    }
+  }
+  
   return {
     url: supabaseUrl ? `${supabaseUrl.substring(0, 25)}...` : 'NOT SET',
-    key: supabaseAnonKey && supabaseAnonKey.startsWith('eyJ') 
-      ? `${supabaseAnonKey.substring(0, 20)}...` 
-      : supabaseAnonKey ? 'INVALID FORMAT' : 'NOT SET',
+    key: maskedKey,
+    keyFormat: supabaseAnonKey?.startsWith('sb_publishable_') ? 'publishable' : 
+               supabaseAnonKey?.startsWith('eyJ') ? 'jwt' : 'unknown',
     isConfigured: isSupabaseConfigured(),
   };
 }
