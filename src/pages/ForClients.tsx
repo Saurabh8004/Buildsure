@@ -18,7 +18,7 @@ export default function ForClients() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-slate-warm py-16 lg:py-24">
+      <section className="bg-grey-light py-16 lg:py-24 border-b border-border-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-navy tracking-tight">
@@ -28,7 +28,7 @@ export default function ForClients() {
               Create construction requirements and receive competitive bids from verified contractors. Compare, choose and monitor — all in one place.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Link to="/get-started" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-semibold text-white bg-teal hover:bg-teal-dark rounded-xl transition-all shadow-lg shadow-teal/20">
+              <Link to="/get-started" className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
                 Post Your Requirement <ArrowRight size={18} />
               </Link>
             </div>
@@ -43,9 +43,9 @@ export default function ForClients() {
           <h2 className="text-2xl sm:text-3xl font-bold text-navy mb-10">Everything You Need</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, i) => (
-              <div key={i} className="p-6 bg-slate-warm rounded-2xl border border-border-light hover:shadow-md transition-shadow">
-                <div className="w-11 h-11 bg-teal/10 rounded-xl flex items-center justify-center mb-4">
-                  <feature.icon size={20} className="text-teal" />
+              <div key={i} className="p-6 bg-grey-light rounded-2xl border border-border-light hover:shadow-md transition-shadow">
+                <div className="w-11 h-11 bg-orange/10 rounded-xl flex items-center justify-center mb-4">
+                  <feature.icon size={20} className="text-orange" />
                 </div>
                 <h3 className="text-base font-bold text-navy">{feature.title}</h3>
                 <p className="mt-2 text-sm text-navy-light/70 leading-relaxed">{feature.desc}</p>
@@ -56,20 +56,18 @@ export default function ForClients() {
       </section>
 
       {/* Bid Comparison */}
-      <section className="py-16 lg:py-24 bg-slate-warm">
+      <section className="py-16 lg:py-24 bg-grey-light border-y border-border-light">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">
-                Smart Bid Comparison
-              </h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">Smart Bid Comparison</h2>
               <p className="mt-4 text-navy-light/70 leading-relaxed">
                 Compare contractor bids across multiple parameters. Lowest price isn't always the best choice — BuildSure helps you understand the complete offer before making the final decision.
               </p>
               <div className="mt-6 space-y-3">
                 {['Bid Amount', 'Timeline', 'Experience', 'Similar Projects', 'Scope Details', 'Materials', 'Warranty', 'Quality History'].map((item, i) => (
                   <div key={i} className="flex items-center gap-2">
-                    <CheckCircle size={16} className="text-teal shrink-0" />
+                    <CheckCircle size={16} className="text-green shrink-0" />
                     <span className="text-sm text-navy-light">{item}</span>
                   </div>
                 ))}
@@ -77,7 +75,7 @@ export default function ForClients() {
             </div>
             <div className="bg-white rounded-2xl p-6 border border-border-light shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-semibold text-teal bg-teal/10 px-2 py-1 rounded">DEMO DATA</span>
+                <span className="text-xs font-semibold text-orange bg-orange/10 px-2 py-1 rounded">DEMO DATA</span>
                 <span className="text-xs text-gray-500">3 Bids Received</span>
               </div>
               <div className="overflow-x-auto">
@@ -110,8 +108,8 @@ export default function ForClients() {
               </div>
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="text-[10px] font-semibold px-2 py-1 bg-blue-100 text-blue-700 rounded">A: Lowest Price</span>
-                <span className="text-[10px] font-semibold px-2 py-1 bg-green-100 text-green-700 rounded">B: Best Value</span>
-                <span className="text-[10px] font-semibold px-2 py-1 bg-amber-100 text-amber-700 rounded">C: Best Rated</span>
+                <span className="text-[10px] font-semibold px-2 py-1 bg-green/10 text-green rounded">B: Best Value</span>
+                <span className="text-[10px] font-semibold px-2 py-1 bg-orange/10 text-orange rounded">C: Best Rated</span>
               </div>
             </div>
           </div>
@@ -124,7 +122,7 @@ export default function ForClients() {
           <h2 className="text-2xl sm:text-3xl font-bold text-navy">Start Your Construction Project</h2>
           <p className="mt-3 text-navy-light/70">Post your requirement and receive competitive bids from verified contractors.</p>
           <div className="mt-8">
-            <Link to="/get-started" className="inline-flex items-center gap-2 px-6 py-3.5 text-base font-semibold text-white bg-teal hover:bg-teal-dark rounded-xl transition-all shadow-lg shadow-teal/20">
+            <Link to="/get-started" className="inline-flex items-center gap-2 px-7 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
               Get Started as Client <ArrowRight size={18} />
             </Link>
           </div>

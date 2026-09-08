@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import HowItWorks from './pages/HowItWorks';
@@ -13,6 +13,8 @@ import FAQ from './pages/FAQ';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Disclaimer from './pages/Disclaimer';
+import Projects from './pages/Projects';
+import Contractors from './pages/Contractors';
 import GetStarted from './pages/GetStarted';
 import SignIn from './pages/SignIn';
 
@@ -22,12 +24,15 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/contractors" element={<Contractors />} />
+          <Route path="/financing" element={<Finance />} />
+          <Route path="/finance" element={<Navigate to="/financing" replace />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/for-clients" element={<ForClients />} />
           <Route path="/for-contractors" element={<ForContractors />} />
           <Route path="/architect-partnership" element={<ArchitectPartnership />} />
           <Route path="/quality-assurance" element={<QualityAssurance />} />
-          <Route path="/finance" element={<Finance />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />

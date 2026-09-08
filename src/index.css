@@ -1,15 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-navy: #1a1a2e;
-  --color-navy-light: #2d2d44;
-  --color-teal: #0d9488;
-  --color-teal-light: #14b8a6;
-  --color-teal-dark: #0f766e;
-  --color-lime: #84cc16;
-  --color-lime-light: #a3e635;
-  --color-slate-warm: #f8fafc;
+  /* BuildSure Brand System */
+  --color-navy: #0f1b2d;
+  --color-navy-light: #1e2d42;
+  --color-navy-dark: #0a1220;
+  --color-orange: #e8611a;
+  --color-orange-light: #f07a3a;
+  --color-orange-dark: #c94e10;
+  --color-green: #16a34a;
+  --color-green-light: #22c55e;
+  --color-green-dark: #15803d;
+  --color-grey-light: #f5f6f8;
+  --color-grey-medium: #e5e7eb;
   --color-border-light: #e2e8f0;
+  --color-slate-warm: #f8fafc;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
@@ -25,4 +30,28 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff;
+  color: var(--color-navy);
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-grey-light);
+}
+::-webkit-scrollbar-thumb {
+  background: #c1c7cf;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a0a8b4;
 }

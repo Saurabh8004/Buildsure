@@ -4,13 +4,10 @@ import { Menu, X } from 'lucide-react';
 
 const navLinks = [
   { to: '/', label: 'Home' },
+  { to: '/projects', label: 'Projects' },
+  { to: '/contractors', label: 'Contractors' },
+  { to: '/financing', label: 'Financing' },
   { to: '/how-it-works', label: 'How It Works' },
-  { to: '/for-clients', label: 'For Clients' },
-  { to: '/for-contractors', label: 'For Contractors' },
-  { to: '/architect-partnership', label: 'Architect / Engineer' },
-  { to: '/quality-assurance', label: 'Quality Assurance' },
-  { to: '/finance', label: 'Finance' },
-  { to: '/about', label: 'About' },
 ];
 
 export default function Header() {
@@ -18,19 +15,19 @@ export default function Header() {
   const location = useLocation();
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-border-light">
+    <header className="sticky top-0 z-50 bg-white border-b border-border-light">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-18">
+        <div className="flex items-center justify-between h-16 lg:h-[68px]">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 shrink-0">
-            <div className="w-8 h-8 bg-teal rounded-lg flex items-center justify-center">
+          <Link to="/" className="flex items-center gap-2.5 shrink-0">
+            <div className="w-9 h-9 bg-navy rounded-lg flex items-center justify-center">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 21h18" />
                 <path d="M5 21V7l7-4 7 4v14" />
                 <path d="M9 21v-6h6v6" />
               </svg>
             </div>
-            <span className="text-xl font-bold text-navy tracking-tight">Build<span className="text-teal">Sure</span></span>
+            <span className="text-xl font-bold text-navy tracking-tight">Build<span className="text-orange">Sure</span></span>
           </Link>
 
           {/* Desktop Nav */}
@@ -39,10 +36,10 @@ export default function Header() {
               <Link
                 key={link.to}
                 to={link.to}
-                className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                className={`px-3.5 py-2 text-sm font-medium rounded-lg transition-colors ${
                   location.pathname === link.to
-                    ? 'text-teal bg-teal/5'
-                    : 'text-navy-light hover:text-teal hover:bg-gray-50'
+                    ? 'text-navy bg-grey-light'
+                    : 'text-navy-light hover:text-navy hover:bg-grey-light'
                 }`}
               >
                 {link.label}
@@ -54,13 +51,13 @@ export default function Header() {
           <div className="hidden lg:flex items-center gap-3">
             <Link
               to="/signin"
-              className="px-4 py-2 text-sm font-medium text-navy hover:text-teal transition-colors"
+              className="px-4 py-2 text-sm font-medium text-navy hover:text-orange transition-colors"
             >
               Sign In
             </Link>
             <Link
               to="/get-started"
-              className="px-5 py-2.5 text-sm font-semibold text-white bg-teal hover:bg-teal-dark rounded-lg transition-colors shadow-sm"
+              className="px-5 py-2.5 text-sm font-semibold text-white bg-orange hover:bg-orange-dark rounded-lg transition-colors shadow-sm"
             >
               Get Started
             </Link>
@@ -68,7 +65,7 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2 text-navy hover:text-teal transition-colors"
+            className="lg:hidden p-2 text-navy hover:text-orange transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
             aria-expanded={mobileOpen}
@@ -89,8 +86,8 @@ export default function Header() {
                 onClick={() => setMobileOpen(false)}
                 className={`block px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                   location.pathname === link.to
-                    ? 'text-teal bg-teal/5'
-                    : 'text-navy hover:text-teal hover:bg-gray-50'
+                    ? 'text-navy bg-grey-light'
+                    : 'text-navy-light hover:text-navy hover:bg-grey-light'
                 }`}
               >
                 {link.label}
@@ -100,14 +97,14 @@ export default function Header() {
               <Link
                 to="/signin"
                 onClick={() => setMobileOpen(false)}
-                className="block text-center px-4 py-3 text-sm font-medium text-navy border border-border-light rounded-lg hover:bg-gray-50 transition-colors"
+                className="block text-center px-4 py-3 text-sm font-medium text-navy border border-border-light rounded-lg hover:bg-grey-light transition-colors"
               >
                 Sign In
               </Link>
               <Link
                 to="/get-started"
                 onClick={() => setMobileOpen(false)}
-                className="block text-center px-4 py-3 text-sm font-semibold text-white bg-teal rounded-lg hover:bg-teal-dark transition-colors"
+                className="block text-center px-4 py-3 text-sm font-semibold text-white bg-orange rounded-lg hover:bg-orange-dark transition-colors"
               >
                 Get Started
               </Link>
