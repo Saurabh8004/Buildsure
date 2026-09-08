@@ -70,10 +70,10 @@ export default function Projects() {
                   <span>Bid deadline: {project.deadline}</span>
                 </div>
                 <Link
-                  to="/get-started"
+                  to="/for-contractors"
                   className="mt-4 block text-center py-2.5 text-sm font-semibold text-orange border border-orange rounded-lg hover:bg-orange hover:text-white transition-colors"
                 >
-                  View Project
+                  View Details
                 </Link>
               </div>
             ))}

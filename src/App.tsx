@@ -17,6 +17,9 @@ import GetStarted from './pages/GetStarted';
 import SignIn from './pages/SignIn';
 import Projects from './pages/Projects';
 import Contractors from './pages/Contractors';
+import CreateProject from './pages/CreateProject';
+import ProjectDetails from './pages/ProjectDetails';
+import ContractorProfile from './pages/ContractorProfile';
 import AdminDashboard from './pages/AdminDashboard';
 import ContractorDashboard from './pages/ContractorDashboard';
 import ClientDashboard from './pages/ClientDashboard';
@@ -45,7 +48,10 @@ export default function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/disclaimer" element={<Disclaimer />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/new" element={<ProtectedRoute requiredRole="client"><CreateProject /></ProtectedRoute>} />
+          <Route path="/projects/:id" element={<ProjectDetails />} />
           <Route path="/contractors" element={<Contractors />} />
+          <Route path="/contractors/:id" element={<ContractorProfile />} />
         </Route>
         <Route path="/get-started" element={<GetStarted />} />
         <Route path="/signin" element={<SignIn />} />

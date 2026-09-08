@@ -119,7 +119,11 @@ export default function ClientDashboard() {
           ) : (
             <div className="space-y-3">
               {projects.slice(0, 5).map((project) => (
-                <div key={project.id} className="p-4 bg-bg rounded-xl border border-border">
+                <div 
+                  key={project.id} 
+                  className="p-4 bg-bg rounded-xl border border-border hover:border-navy/20 hover:shadow-md transition-all cursor-pointer"
+                  onClick={() => navigate(`/projects/${project.id}`)}
+                >
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-semibold text-navy">{project.title}</h3>

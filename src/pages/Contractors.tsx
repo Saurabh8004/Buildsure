@@ -75,10 +75,10 @@ export default function Contractors() {
                   ))}
                 </div>
                 <Link
-                  to="/get-started"
+                  to="/architect-partnership"
                   className="mt-5 block text-center py-2.5 text-sm font-semibold text-navy border border-border rounded-lg hover:border-navy hover:text-navy hover:bg-navy/5 transition-colors"
                 >
-                  View Profile
+                  Learn More
                 </Link>
               </div>
             ))}
