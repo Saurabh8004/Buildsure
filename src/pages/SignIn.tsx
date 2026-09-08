@@ -59,13 +59,23 @@ export default function SignIn() {
           return;
         }
 
-        await register({
+        const result = await register({
           email: form.email,
           password: form.password,
           fullName: form.name,
           mobile: form.mobile || undefined,
           role: form.role as 'client' | 'contractor' | 'architect' | 'inspector',
         });
+        
+        // Handle email confirmation required case
+        if (result.emailConfirmationRequired) {
+          setSuccessMessage('Account created! Please check your email to verify your account, then sign in.');
+          setLoading(false);
+          // Don't try to navigate - user needs to verify email first
+          return;
+        }
+        
+        // Normal flow - session exists, will navigate via useEffect
         setSuccessMessage('Account created! Redirecting to your dashboard...');
       } else {
         await login(form.email, form.password);

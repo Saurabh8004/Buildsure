@@ -187,6 +187,15 @@ export const authService = {
 
       console.log('[Auth] ✓ Auth user created:', authData.user.id);
 
+      // CRITICAL: Check if session exists (email confirmation may be required)
+      const emailConfirmationRequired = !authData.session;
+      
+      if (emailConfirmationRequired) {
+        console.log('[Auth] ⚠ Email confirmation required - no session yet');
+      } else {
+        console.log('[Auth] ✓ Session created - user is authenticated');
+      }
+
       // Step 2: Create user profile in users table
       console.log('[Auth] Step 2: Creating user profile...');
       const { error: userError } = await supabase
@@ -228,7 +237,11 @@ export const authService = {
       }
 
       console.log('[Auth] ✓ Registration complete');
-      return { user: authData.user };
+      return { 
+        user: authData.user, 
+        session: authData.session,
+        emailConfirmationRequired 
+      };
     } catch (error: any) {
       if (error instanceof AuthError) {
         throw error;

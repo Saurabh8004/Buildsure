@@ -12,7 +12,7 @@ interface AuthContextType {
     fullName: string;
     mobile?: string;
     role: 'client' | 'contractor' | 'architect' | 'inspector';
-  }) => Promise<void>;
+  }) => Promise<{ emailConfirmationRequired?: boolean }>;
   logout: () => Promise<void>;
 }
 
@@ -64,8 +64,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mobile?: string;
     role: 'client' | 'contractor' | 'architect' | 'inspector';
   }) {
-    await authService.register(data);
-    await checkUser();
+    const result = await authService.register(data);
+    
+    // Only check user if session exists (email confirmation not required)
+    if (!result.emailConfirmationRequired) {
+      await checkUser();
+    }
+    
+    return { emailConfirmationRequired: result.emailConfirmationRequired };
   }
 
   async function logout() {
