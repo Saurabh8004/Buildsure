@@ -22,6 +22,7 @@ import ContractorDashboard from './pages/ContractorDashboard';
 import ClientDashboard from './pages/ClientDashboard';
 import ArchitectDashboard from './pages/ArchitectDashboard';
 import InspectorDashboard from './pages/InspectorDashboard';
+import ConfigCheck from './pages/ConfigCheck';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
@@ -48,6 +49,7 @@ export default function App() {
         </Route>
         <Route path="/get-started" element={<GetStarted />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/config-check" element={<ConfigCheck />} />
         
         {/* Dashboard Routes */}
         <Route

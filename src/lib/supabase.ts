@@ -1,15 +1,61 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
+// Validate environment variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true,
-  },
-});
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error(
+    '%c⚠️ BUILDSURE CONFIGURATION ERROR',
+    'color: red; font-weight: bold; font-size: 16px;',
+    '\n\nSupabase environment variables are not configured!',
+    '\n\nPlease create a .env file in the project root with:',
+    '\n\nVITE_SUPABASE_URL=https://your-project-id.supabase.co',
+    '\nVITE_SUPABASE_ANON_KEY=your-anon-key-here',
+    '\n\nGet these values from your Supabase project dashboard:',
+    '\nhttps://app.supabase.com → Settings → API',
+    '\n\nSee BACKEND_SETUP.md for detailed instructions.'
+  );
+}
+
+// Validate URL format
+if (supabaseUrl && !supabaseUrl.includes('.supabase.co')) {
+  console.warn(
+    '%c⚠️ Supabase URL may be invalid',
+    'color: orange; font-weight: bold;',
+    '\nURL should be in format: https://your-project-id.supabase.co',
+    '\nCurrent URL:', supabaseUrl
+  );
+}
+
+// Validate anon key format (should start with 'eyJ')
+if (supabaseAnonKey && !supabaseAnonKey.startsWith('eyJ')) {
+  console.warn(
+    '%c⚠️ Supabase anon key may be invalid',
+    'color: orange; font-weight: bold;',
+    '\nAnon key should start with "eyJ" (JWT format)',
+    '\nCurrent key starts with:', supabaseAnonKey.substring(0, 10)
+  );
+}
+
+export const supabase = createClient(
+  supabaseUrl || '',
+  supabaseAnonKey || '',
+  {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true,
+    },
+  }
+);
+
+// Helper function to check if Supabase is configured
+export function isSupabaseConfigured(): boolean {
+  return Boolean(supabaseUrl && supabaseAnonKey && 
+    supabaseUrl !== 'https://your-project.supabase.co' &&
+    supabaseAnonKey !== 'your-anon-key');
+}
 
 // Type definitions
 export interface User {
