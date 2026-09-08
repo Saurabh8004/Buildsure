@@ -21,9 +21,9 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-grey-light to-white flex flex-col">
+    <div className="min-h-screen bg-bg flex flex-col">
       <div className="p-4 sm:p-6">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm text-navy-light hover:text-orange transition-colors">
+        <Link to="/" className="inline-flex items-center gap-2 text-sm text-text-muted hover:text-navy transition-colors">
           <ArrowLeft size={16} /> Back to Home
         </Link>
       </div>
@@ -39,23 +39,23 @@ export default function SignIn() {
                   <path d="M9 21v-6h6v6" />
                 </svg>
               </div>
-              <span className="text-2xl font-bold text-navy tracking-tight">Build<span className="text-orange">Sure</span></span>
+              <span className="text-2xl font-bold text-navy tracking-tight">Build<span className="text-teal">Sure</span></span>
             </Link>
             <h1 className="text-2xl font-bold text-navy tracking-tight">
               {isSignUp ? 'Create Your Account' : 'Welcome Back'}
             </h1>
-            <p className="mt-2 text-navy-light/70 text-sm">
+            <p className="mt-2 text-text-muted text-sm">
               {isSignUp ? 'Join BuildSure to get started.' : 'Sign in to your BuildSure account.'}
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-6 sm:p-8 border border-border-light shadow-sm space-y-5">
+          <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-6 sm:p-8 border border-border shadow-sm space-y-5">
             {(isSignUp || role) && (
               <div>
-                <label htmlFor="role" className="block text-sm font-medium text-navy mb-2">Role</label>
+                <label htmlFor="role" className="block text-sm font-medium text-text mb-2">Role</label>
                 <select
                   id="role" name="role" value={form.role} onChange={handleChange}
-                  className="w-full px-4 py-3 border border-border-light rounded-xl text-sm text-navy focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange transition-colors bg-white"
+                  className="w-full px-4 py-3 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-colors bg-white"
                 >
                   <option value="">Select your role</option>
                   <option value="client">Client</option>
@@ -68,37 +68,37 @@ export default function SignIn() {
 
             {isSignUp && (
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-navy mb-2">Full Name</label>
+                <label htmlFor="name" className="block text-sm font-medium text-text mb-2">Full Name</label>
                 <input type="text" id="name" name="name" required={isSignUp} value={form.name} onChange={handleChange}
-                  className="w-full px-4 py-3 border border-border-light rounded-xl text-sm text-navy focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange transition-colors"
+                  className="w-full px-4 py-3 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-colors"
                   placeholder="Your full name" />
               </div>
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-navy mb-2">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-text mb-2">Email</label>
               <input type="email" id="email" name="email" required value={form.email} onChange={handleChange}
-                className="w-full px-4 py-3 border border-border-light rounded-xl text-sm text-navy focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange transition-colors"
+                className="w-full px-4 py-3 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-colors"
                 placeholder="your@email.com" />
             </div>
 
             {isSignUp && (
               <div>
-                <label htmlFor="mobile" className="block text-sm font-medium text-navy mb-2">Mobile Number</label>
+                <label htmlFor="mobile" className="block text-sm font-medium text-text mb-2">Mobile Number</label>
                 <input type="tel" id="mobile" name="mobile" required={isSignUp} value={form.mobile} onChange={handleChange}
-                  className="w-full px-4 py-3 border border-border-light rounded-xl text-sm text-navy focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange transition-colors"
+                  className="w-full px-4 py-3 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-colors"
                   placeholder="+91 XXXXX XXXXX" />
               </div>
             )}
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-navy mb-2">Password</label>
+              <label htmlFor="password" className="block text-sm font-medium text-text mb-2">Password</label>
               <div className="relative">
                 <input type={showPassword ? 'text' : 'password'} id="password" name="password" required value={form.password} onChange={handleChange}
-                  className="w-full px-4 py-3 pr-11 border border-border-light rounded-xl text-sm text-navy focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange transition-colors"
+                  className="w-full px-4 py-3 pr-11 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-teal/30 focus:border-teal transition-colors"
                   placeholder="••••••••" />
                 <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-navy transition-colors"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}>
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -112,7 +112,7 @@ export default function SignIn() {
 
             <div className="text-center">
               <button type="button" onClick={() => setIsSignUp(!isSignUp)}
-                className="text-sm text-navy-light hover:text-orange transition-colors">
+                className="text-sm text-text-muted hover:text-navy transition-colors">
                 {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
               </button>
             </div>
@@ -120,7 +120,7 @@ export default function SignIn() {
 
           {!role && (
             <div className="text-center mt-6">
-              <Link to="/get-started" className="text-sm text-gray-500 hover:text-orange transition-colors">
+              <Link to="/get-started" className="text-sm text-text-muted hover:text-navy transition-colors">
                 ← Choose a different role
               </Link>
             </div>

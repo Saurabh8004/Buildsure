@@ -1,16 +1,16 @@
 export default function Disclaimer() {
   return (
     <div>
-      <section className="bg-slate-warm py-16 lg:py-20">
+      <section className="bg-bg py-16 lg:py-20 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-navy tracking-tight">Disclaimer</h1>
-          <p className="mt-2 text-sm text-gray-500">Last updated: January 2025</p>
+          <p className="mt-2 text-sm text-text-muted">Last updated: January 2025</p>
         </div>
       </section>
 
       <section className="py-16 bg-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-8 text-navy-light/80 text-sm leading-relaxed">
+          <div className="space-y-8 text-text text-sm leading-relaxed">
             <div>
               <h2 className="text-lg font-bold text-navy mb-3">General</h2>
               <p>The information provided on BuildSure is for general informational purposes. While we strive to keep information accurate and up-to-date, we make no representations or warranties of any kind about the completeness, accuracy or reliability of the platform or its content.</p>

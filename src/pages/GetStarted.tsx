@@ -7,7 +7,7 @@ const roles = [
     title: 'Client',
     desc: 'I want to post a construction project and find contractors.',
     icon: Users,
-    color: 'bg-orange/10 border-orange/20',
+    color: 'bg-orange/5 border-orange/20',
     iconColor: 'text-orange',
     cta: 'Post a Project',
   },
@@ -25,8 +25,8 @@ const roles = [
     title: 'Architect / Engineer',
     desc: 'I want to offer professional construction services.',
     icon: Ruler,
-    color: 'bg-blue-50 border-blue-100',
-    iconColor: 'text-blue-600',
+    color: 'bg-blue/5 border-blue/10',
+    iconColor: 'text-blue',
     cta: 'Join Partnership',
   },
   {
@@ -34,18 +34,18 @@ const roles = [
     title: 'Quality Inspector',
     desc: 'I want to inspect and monitor construction quality.',
     icon: Eye,
-    color: 'bg-green/5 border-green/20',
-    iconColor: 'text-green',
+    color: 'bg-teal/5 border-teal/10',
+    iconColor: 'text-teal',
     cta: 'Join as Inspector',
   },
 ];
 
 export default function GetStarted() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-grey-light to-white flex flex-col">
+    <div className="min-h-screen bg-bg flex flex-col">
       {/* Header */}
       <div className="p-4 sm:p-6">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm text-navy-light hover:text-orange transition-colors">
+        <Link to="/" className="inline-flex items-center gap-2 text-sm text-text-muted hover:text-navy transition-colors">
           ← Back to Home
         </Link>
       </div>
@@ -63,10 +63,10 @@ export default function GetStarted() {
                   <path d="M9 21v-6h6v6" />
                 </svg>
               </div>
-              <span className="text-2xl font-bold text-navy tracking-tight">Build<span className="text-orange">Sure</span></span>
+              <span className="text-2xl font-bold text-navy tracking-tight">Build<span className="text-teal">Sure</span></span>
             </Link>
             <h1 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">How will you use BuildSure?</h1>
-            <p className="mt-2 text-navy-light/70">Select your role to get started.</p>
+            <p className="mt-2 text-text-muted">Select your role to get started.</p>
           </div>
 
           {/* Role Cards */}
@@ -75,13 +75,13 @@ export default function GetStarted() {
               <Link
                 key={role.id}
                 to={`/signin?role=${role.id}`}
-                className={`group p-6 rounded-2xl border ${role.color} hover:shadow-lg transition-all hover:-translate-y-0.5`}
+                className={`group p-6 rounded-2xl border ${role.color} bg-white hover:shadow-lg transition-all hover:-translate-y-0.5`}
               >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${role.iconColor} bg-white shadow-sm`}>
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${role.iconColor} bg-bg`}>
                   <role.icon size={22} />
                 </div>
                 <h3 className="text-lg font-bold text-navy">{role.title}</h3>
-                <p className="mt-1 text-sm text-navy-light/70">{role.desc}</p>
+                <p className="mt-1 text-sm text-text-muted">{role.desc}</p>
                 <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-orange group-hover:gap-2 transition-all">
                   {role.cta} <ArrowRight size={14} />
                 </div>
@@ -91,9 +91,9 @@ export default function GetStarted() {
 
           {/* Sign in link */}
           <div className="text-center mt-8">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-text-muted">
               Already have an account?{' '}
-              <Link to="/signin" className="font-semibold text-orange hover:text-orange-dark transition-colors">
+              <Link to="/signin" className="font-semibold text-blue hover:text-navy transition-colors">
                 Sign In
               </Link>
             </p>

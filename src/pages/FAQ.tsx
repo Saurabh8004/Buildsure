@@ -22,11 +22,11 @@ export default function FAQ() {
 
   return (
     <div>
-      <section className="bg-grey-light py-16 lg:py-20 border-b border-border-light">
+      <section className="bg-bg py-16 lg:py-20 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h1 className="text-3xl sm:text-4xl font-bold text-navy tracking-tight">Frequently Asked Questions</h1>
-            <p className="mt-4 text-lg text-navy-light/70">Everything you need to know about BuildSure.</p>
+            <p className="mt-4 text-lg text-text-muted">Everything you need to know about BuildSure.</p>
           </div>
         </div>
       </section>
@@ -35,18 +35,18 @@ export default function FAQ() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-3">
             {faqs.map((faq, i) => (
-              <div key={i} className="border border-border-light rounded-xl overflow-hidden">
+              <div key={i} className="border border-border rounded-xl overflow-hidden">
                 <button
                   onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                  className="w-full flex items-center justify-between p-5 text-left hover:bg-grey-light transition-colors"
+                  className="w-full flex items-center justify-between p-5 text-left hover:bg-bg transition-colors"
                   aria-expanded={openIndex === i}
                 >
                   <span className="text-sm font-semibold text-navy pr-4">{faq.q}</span>
-                  <ChevronDown size={18} className={`text-gray-400 shrink-0 transition-transform ${openIndex === i ? 'rotate-180' : ''}`} />
+                  <ChevronDown size={18} className={`text-text-muted shrink-0 transition-transform ${openIndex === i ? 'rotate-180' : ''}`} />
                 </button>
                 {openIndex === i && (
                   <div className="px-5 pb-5">
-                    <p className="text-sm text-navy-light/70 leading-relaxed">{faq.a}</p>
+                    <p className="text-sm text-text-muted leading-relaxed">{faq.a}</p>
                   </div>
                 )}
               </div>

@@ -1,19 +1,36 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle, Shield, Eye, Award, Users, FileText, Banknote, MapPin, Clock, TrendingUp, Search } from 'lucide-react';
+import { ArrowRight, Shield, CheckCircle, Building2, HardHat, Ruler, Eye, ChevronDown, MapPin, Clock, Banknote, FileText, Award, Users, Target, TrendingUp, Zap } from 'lucide-react';
+import { useState } from 'react';
+
+const demoProjects = [
+  { name: 'Residential Construction', type: 'Residential', location: 'Gomti Nagar, Lucknow', size: '2,400 sq.ft.', budget: '₹35–45 Lakhs', status: 'Verified', bidding: true },
+  { name: 'Commercial Office Complex', type: 'Commercial', location: 'Hazratganj, Lucknow', size: '8,500 sq.ft.', budget: '₹1.2–1.5 Cr', status: 'Verified', bidding: true },
+  { name: 'Villa Renovation', type: 'Renovation', location: 'Indira Nagar, Lucknow', size: '3,200 sq.ft.', budget: '₹18–22 Lakhs', status: 'Verified', bidding: true },
+];
+
+const faqs = [
+  { q: 'What is BuildSure?', a: 'BuildSure is a construction procurement platform connecting property owners with verified contractors, architects, engineers and quality inspectors.' },
+  { q: 'How does BuildSure work?', a: 'Clients post requirements. Eligible contractors submit competitive bids. Clients compare offers and choose their preferred contractor. Projects move into execution with quality monitoring.' },
+  { q: 'Is posting a project free?', a: 'Yes, clients can post construction requirements for free on BuildSure.' },
+  { q: 'Can I choose my contractor?', a: 'Yes. Clients always make the final contractor selection. BuildSure never selects a contractor for you.' },
+  { q: 'Does BuildSure monitor quality?', a: 'BuildSure supports independent project monitoring and inspections at key construction stages.' },
+];
 
 export default function Home() {
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
   return (
     <div>
-      {/* HERO */}
-      <section className="bg-white py-16 lg:py-24">
+      {/* Hero */}
+      <section className="bg-bg py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
+            <div className="max-w-xl">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-navy tracking-tight leading-[1.1]">
                 BUILD BETTER.<br />
-                <span className="text-orange">CONNECT SMARTER.</span>
+                CONNECT SMARTER.
               </h1>
-              <p className="mt-6 text-lg text-navy-light/70 leading-relaxed max-w-xl">
+              <p className="mt-5 text-lg text-text-muted leading-relaxed">
                 Find trusted contractors, compare competitive construction bids and get help funding your construction project.
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
@@ -30,277 +47,302 @@ export default function Home() {
                   Find Contractors
                 </Link>
               </div>
-              <p className="mt-4 text-sm text-gray-500">
+              <p className="mt-4 text-sm text-text-muted">
                 For property owners, contractors, architects, engineers and construction professionals.
               </p>
             </div>
+
             {/* Hero Visual */}
             <div className="hidden lg:block">
               <div className="relative">
-                <div className="bg-grey-light rounded-3xl p-8 border border-border-light">
-                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-border-light">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs font-semibold text-green bg-green/10 px-2 py-1 rounded">LIVE PROJECT</span>
-                      <span className="text-xs text-gray-500">3 Bids Received</span>
+                <div className="bg-white rounded-3xl p-8 border border-border card-shadow">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 bg-teal/10 rounded-xl flex items-center justify-center">
+                      <Building2 size={20} className="text-teal" />
                     </div>
-                    <h4 className="text-base font-bold text-navy">Residential Construction</h4>
-                    <p className="text-sm text-gray-500 mt-1">Gomti Nagar, Lucknow • 2,400 sq.ft.</p>
-                    <div className="mt-4 space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-500">Budget Range</span>
-                        <span className="text-sm font-semibold text-navy">₹35–45 Lakhs</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-500">Timeline</span>
-                        <span className="text-sm font-semibold text-navy">8–10 months</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-gray-500">Status</span>
-                        <span className="text-xs font-semibold text-green bg-green/10 px-2 py-0.5 rounded">Bidding Open</span>
-                      </div>
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-border-light">
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-navy/10 rounded-full"></div>
-                        <div className="w-6 h-6 bg-orange/20 rounded-full -ml-2"></div>
-                        <div className="w-6 h-6 bg-green/20 rounded-full -ml-2"></div>
-                        <span className="text-xs text-gray-500 ml-2">+3 eligible contractors</span>
-                      </div>
+                    <div>
+                      <p className="text-sm font-bold text-navy">Active Project</p>
+                      <p className="text-xs text-text-muted">Residential Construction</p>
                     </div>
                   </div>
-                  <div className="mt-4 bg-white rounded-2xl p-5 shadow-sm border border-border-light">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-orange/10 rounded-lg flex items-center justify-center">
-                        <TrendingUp size={18} className="text-orange" />
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-bg rounded-lg">
+                      <span className="text-xs font-medium text-text">Progress</span>
+                      <span className="text-xs font-bold text-navy">62%</span>
+                    </div>
+                    <div className="w-full bg-bg-alt rounded-full h-2">
+                      <div className="bg-teal h-2 rounded-full" style={{ width: '62%' }}></div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 mt-4">
+                      <div className="text-center p-2 bg-green/5 rounded-lg">
+                        <CheckCircle size={14} className="text-green mx-auto mb-1" />
+                        <p className="text-[10px] font-medium text-text-muted">Foundation</p>
                       </div>
-                      <div>
-                        <p className="text-sm font-semibold text-navy">Smart Bid Comparison</p>
-                        <p className="text-xs text-gray-500">Compare price, scope, timeline & quality</p>
+                      <div className="text-center p-2 bg-teal/5 rounded-lg">
+                        <div className="w-3.5 h-3.5 bg-teal rounded-full mx-auto mb-1"></div>
+                        <p className="text-[10px] font-medium text-text">Brickwork</p>
+                      </div>
+                      <div className="text-center p-2 bg-bg-alt rounded-lg">
+                        <div className="w-3.5 h-3.5 bg-border rounded-full mx-auto mb-1"></div>
+                        <p className="text-[10px] font-medium text-text-muted">MEP</p>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="absolute -top-3 -right-3 w-20 h-20 bg-orange/5 rounded-full blur-xl"></div>
-                <div className="absolute -bottom-3 -left-3 w-24 h-24 bg-navy/5 rounded-full blur-xl"></div>
+                {/* Decorative elements */}
+                <div className="absolute -top-4 -right-4 w-20 h-20 bg-blue/5 rounded-full blur-2xl"></div>
+                <div className="absolute -bottom-4 -left-4 w-24 h-24 bg-teal/5 rounded-full blur-2xl"></div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* VALUE FLOW */}
-      <section className="bg-grey-light py-12 lg:py-16 border-y border-border-light">
+      {/* Value Flow */}
+      <section className="py-12 bg-white border-y border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 lg:gap-10">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8">
             {[
               { label: 'Post a Project', icon: FileText },
-              { label: 'Get Competitive Bids', icon: Users },
-              { label: 'Compare', icon: Search },
-              { label: 'Choose', icon: CheckCircle },
+              { label: 'Get Competitive Bids', icon: TrendingUp },
+              { label: 'Compare', icon: Target },
+              { label: 'Choose', icon: Users },
               { label: 'Build with Visibility', icon: Eye },
             ].map((step, i) => (
-              <div key={i} className="flex items-center gap-4 sm:gap-6 lg:gap-10">
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center border border-border-light shadow-sm mb-2">
-                    <step.icon size={20} className="text-orange" />
+              <div key={i} className="flex items-center gap-4 sm:gap-8">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-navy/5 rounded-lg flex items-center justify-center">
+                    <step.icon size={14} className="text-navy" />
                   </div>
-                  <span className="text-xs sm:text-sm font-medium text-navy">{step.label}</span>
+                  <span className="text-xs sm:text-sm font-semibold text-navy">{step.label}</span>
                 </div>
-                {i < 4 && (
-                  <svg width="20" height="12" viewBox="0 0 20 12" className="text-gray-300 hidden sm:block">
-                    <path d="M0 6h16m0 0l-4-4m4 4l-4 4" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                )}
+                {i < 4 && <ChevronDown size={14} className="text-border rotate-[-90deg] hidden sm:block" />}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* PROJECTS SECTION */}
-      <section className="py-16 lg:py-24 bg-white">
+      {/* Projects Section */}
+      <section className="py-16 lg:py-24 bg-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+          <div className="flex items-end justify-between mb-10">
             <div>
               <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">
                 Construction Projects Looking for the Right Professionals
               </h2>
-              <p className="mt-2 text-navy-light/70">Active opportunities from verified clients.</p>
+              <p className="mt-2 text-text-muted">Active opportunities from verified clients.</p>
             </div>
-            <Link to="/projects" className="text-sm font-semibold text-orange hover:text-orange-dark transition-colors flex items-center gap-1">
-              View All Projects <ArrowRight size={14} />
+            <Link to="/projects" className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-blue hover:text-navy transition-colors">
+              View All <ArrowRight size={14} />
             </Link>
           </div>
+
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { name: 'Residential Construction', type: 'Residential', location: 'Gomti Nagar, Lucknow', size: '2,400 sq.ft.', budget: '₹35–45 Lakhs', status: 'Verified', bidding: 'Open' },
-              { name: 'Commercial Office Build', type: 'Commercial', location: 'Hazratganj, Lucknow', size: '5,000 sq.ft.', budget: '₹80L–1Cr', status: 'Verified', bidding: 'Open' },
-              { name: 'Villa Renovation', type: 'Renovation', location: 'Indira Nagar, Lucknow', size: '3,200 sq.ft.', budget: '₹15–20 Lakhs', status: 'Verified', bidding: 'Open' },
-            ].map((project, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 border border-border-light hover:shadow-md transition-shadow">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-semibold text-green bg-green/10 px-2 py-1 rounded">🟢 {project.status}</span>
-                  <span className="text-xs font-medium text-orange bg-orange/10 px-2 py-1 rounded">{project.bidding}</span>
+            {demoProjects.map((project, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 border border-border card-shadow hover:card-shadow-hover transition-all">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-10 h-10 bg-blue/10 rounded-xl flex items-center justify-center">
+                    <Building2 size={18} className="text-blue" />
+                  </div>
+                  <span className="flex items-center gap-1 text-xs font-semibold text-green bg-green/10 px-2 py-1 rounded">
+                    <Shield size={10} /> {project.status}
+                  </span>
                 </div>
                 <h3 className="text-lg font-bold text-navy">{project.name}</h3>
-                <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
+                <p className="text-sm text-text-muted mt-1 flex items-center gap-1">
                   <MapPin size={12} /> {project.location}
                 </p>
                 <div className="mt-4 grid grid-cols-2 gap-3">
-                  <div className="bg-grey-light rounded-lg p-2.5">
-                    <p className="text-[10px] text-gray-500 uppercase tracking-wide">Type</p>
-                    <p className="text-xs font-semibold text-navy">{project.type}</p>
+                  <div className="bg-bg rounded-lg p-2.5">
+                    <p className="text-[10px] text-text-muted uppercase tracking-wide">Size</p>
+                    <p className="text-sm font-semibold text-text">{project.size}</p>
                   </div>
-                  <div className="bg-grey-light rounded-lg p-2.5">
-                    <p className="text-[10px] text-gray-500 uppercase tracking-wide">Size</p>
-                    <p className="text-xs font-semibold text-navy">{project.size}</p>
+                  <div className="bg-bg rounded-lg p-2.5">
+                    <p className="text-[10px] text-text-muted uppercase tracking-wide">Budget</p>
+                    <p className="text-sm font-semibold text-text">{project.budget}</p>
                   </div>
                 </div>
-                <div className="mt-3 bg-grey-light rounded-lg p-2.5">
-                  <p className="text-[10px] text-gray-500 uppercase tracking-wide">Budget Range</p>
-                  <p className="text-sm font-bold text-navy">{project.budget}</p>
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="text-xs font-medium text-teal flex items-center gap-1">
+                    <Clock size={10} /> Bidding Open
+                  </span>
+                  <Link to="/projects" className="text-xs font-semibold text-orange hover:text-orange-dark transition-colors">
+                    View Project →
+                  </Link>
                 </div>
-                <Link to="/projects" className="mt-4 block text-center py-2.5 text-sm font-semibold text-orange border border-orange rounded-lg hover:bg-orange hover:text-white transition-colors">
-                  View Project
-                </Link>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-xs text-gray-400 text-center">Sample projects shown for demonstration. Real projects appear after client posting.</p>
+
+          <div className="mt-6 text-center sm:hidden">
+            <Link to="/projects" className="inline-flex items-center gap-1 text-sm font-semibold text-blue hover:text-navy transition-colors">
+              View All Projects <ArrowRight size={14} />
+            </Link>
+          </div>
+          <p className="mt-6 text-xs text-text-muted text-center">DEMO DATA — Sample projects shown for demonstration.</p>
         </div>
       </section>
 
-      {/* FINANCING SECTION */}
-      <section className="bg-navy py-16 lg:py-24">
+      {/* Financing Section */}
+      <section className="py-16 lg:py-24 bg-navy">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
               Need Funding for Your Project?
             </h2>
-            <p className="mt-4 text-gray-300 max-w-2xl mx-auto">
+            <p className="mt-3 text-white/70 max-w-2xl mx-auto">
               Construction and working capital can put pressure on your finances. BuildSure can help connect eligible users with financing partners and make the process lighter.
             </p>
           </div>
+
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
-              <h3 className="text-lg font-bold text-white mb-4">For Clients</h3>
+            {/* Client Finance */}
+            <div className="bg-white rounded-2xl p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-navy/5 rounded-xl flex items-center justify-center">
+                  <Building2 size={18} className="text-navy" />
+                </div>
+                <h3 className="text-lg font-bold text-navy">For Clients</h3>
+              </div>
               <div className="space-y-3">
                 {['Construction Finance', 'Renovation Finance', 'Home Improvement Finance'].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                    <Banknote size={16} className="text-orange shrink-0" />
-                    <span className="text-sm text-gray-200">{item}</span>
+                  <div key={i} className="flex items-center gap-3 p-3 bg-bg rounded-lg">
+                    <Banknote size={14} className="text-blue shrink-0" />
+                    <span className="text-sm text-text">{item}</span>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
-              <h3 className="text-lg font-bold text-white mb-4">For Contractors</h3>
+
+            {/* Contractor Finance */}
+            <div className="bg-white rounded-2xl p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-navy/5 rounded-xl flex items-center justify-center">
+                  <HardHat size={18} className="text-navy" />
+                </div>
+                <h3 className="text-lg font-bold text-navy">For Contractors</h3>
+              </div>
               <div className="space-y-3">
                 {['Working Capital', 'Material Finance', 'Equipment Finance', 'Project Finance'].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                    <Banknote size={16} className="text-orange shrink-0" />
-                    <span className="text-sm text-gray-200">{item}</span>
+                  <div key={i} className="flex items-center gap-3 p-3 bg-bg rounded-lg">
+                    <Banknote size={14} className="text-blue shrink-0" />
+                    <span className="text-sm text-text">{item}</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-          <div className="text-center mt-10">
+
+          <div className="mt-10 text-center">
             <Link to="/financing" className="inline-flex items-center gap-2 px-7 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/30">
               Explore Financing <ArrowRight size={18} />
             </Link>
-            <p className="mt-4 text-xs text-gray-400">Financing is subject to eligibility, partner policies and underwriting. BuildSure does not guarantee approval.</p>
+            <p className="mt-4 text-xs text-white/50">Financing is subject to eligibility, partner policies and underwriting. BuildSure does not guarantee approval.</p>
           </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
+      {/* How It Works */}
       <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
+          <div className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">How BuildSure Works</h2>
-            <p className="mt-3 text-navy-light/70 max-w-xl mx-auto">A structured process for clients and contractors.</p>
+            <p className="mt-3 text-text-muted max-w-xl mx-auto">A structured process from project posting to quality-monitored completion.</p>
           </div>
-          <div className="grid lg:grid-cols-2 gap-12">
+
+          <div className="grid md:grid-cols-2 gap-12">
             {/* Client Flow */}
-            <div className="bg-grey-light rounded-2xl p-8 border border-border-light">
+            <div>
               <h3 className="text-lg font-bold text-navy mb-6 flex items-center gap-2">
-                <span className="w-8 h-8 bg-orange/10 rounded-lg flex items-center justify-center text-orange text-sm font-bold">C</span>
+                <div className="w-8 h-8 bg-orange/10 rounded-lg flex items-center justify-center">
+                  <Building2 size={14} className="text-orange" />
+                </div>
                 For Clients
               </h3>
               <div className="space-y-4">
                 {[
-                  { num: '01', text: 'Post your project' },
-                  { num: '02', text: 'BuildSure structures & reviews the requirement' },
-                  { num: '03', text: 'Eligible contractors submit bids' },
-                  { num: '04', text: 'Compare complete offers' },
-                  { num: '05', text: 'Choose your contractor' },
-                  { num: '06', text: 'Execute with quality monitoring' },
+                  'Post your project',
+                  'BuildSure structures the requirement',
+                  'Eligible contractors submit bids',
+                  'Compare complete offers',
+                  'Choose your contractor',
+                  'Project execution with quality monitoring',
                 ].map((step, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <span className="text-xs font-bold text-orange bg-orange/10 px-2 py-1 rounded shrink-0">{step.num}</span>
-                    <span className="text-sm text-navy-light">{step.text}</span>
+                  <div key={i} className="flex items-start gap-3">
+                    <span className="text-xs font-bold text-orange bg-orange/10 w-6 h-6 rounded flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+                    <span className="text-sm text-text">{step}</span>
                   </div>
                 ))}
               </div>
             </div>
+
             {/* Contractor Flow */}
-            <div className="bg-grey-light rounded-2xl p-8 border border-border-light">
+            <div>
               <h3 className="text-lg font-bold text-navy mb-6 flex items-center gap-2">
-                <span className="w-8 h-8 bg-navy/10 rounded-lg flex items-center justify-center text-navy text-sm font-bold">K</span>
+                <div className="w-8 h-8 bg-teal/10 rounded-lg flex items-center justify-center">
+                  <HardHat size={14} className="text-teal" />
+                </div>
                 For Contractors
               </h3>
               <div className="space-y-4">
                 {[
-                  { num: '01', text: 'Create your professional profile' },
-                  { num: '02', text: 'Set service areas and specializations' },
-                  { num: '03', text: 'Discover relevant opportunities' },
-                  { num: '04', text: 'Submit structured bids' },
-                  { num: '05', text: 'Get shortlisted / awarded' },
-                  { num: '06', text: 'Execute the project' },
+                  'Create your professional profile',
+                  'Set service areas and specializations',
+                  'Discover relevant opportunities',
+                  'Submit structured bids',
+                  'Get shortlisted / awarded',
+                  'Execute the project',
                 ].map((step, i) => (
-                  <div key={i} className="flex items-start gap-4">
-                    <span className="text-xs font-bold text-navy bg-navy/10 px-2 py-1 rounded shrink-0">{step.num}</span>
-                    <span className="text-sm text-navy-light">{step.text}</span>
+                  <div key={i} className="flex items-start gap-3">
+                    <span className="text-xs font-bold text-teal bg-teal/10 w-6 h-6 rounded flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+                    <span className="text-sm text-text">{step}</span>
                   </div>
                 ))}
               </div>
             </div>
           </div>
+
+          <div className="mt-12 text-center">
+            <Link to="/how-it-works" className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-navy border-2 border-navy hover:bg-navy hover:text-white rounded-xl transition-all">
+              Learn More <ArrowRight size={14} />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* WHY BUILDSURE */}
-      <section className="py-16 lg:py-24 bg-grey-light border-y border-border-light">
+      {/* Why BuildSure */}
+      <section className="py-16 lg:py-24 bg-bg border-y border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">Why BuildSure</h2>
-            <p className="mt-3 text-navy-light/70 max-w-2xl mx-auto">
+            <p className="mt-3 text-text-muted max-w-2xl mx-auto">
               BuildSure gives clients more visibility before and during construction — while giving contractors better access to relevant project opportunities.
             </p>
           </div>
+
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { title: 'Transparency', desc: 'Clear information, structured bids, visible processes.', icon: Eye },
-              { title: 'Competition', desc: 'Multiple contractors compete for better value.', icon: TrendingUp },
-              { title: 'Verification', desc: 'Professional profiles and eligibility checks.', icon: Shield },
-              { title: 'Choice', desc: 'Clients always make the final contractor decision.', icon: CheckCircle },
-              { title: 'Quality', desc: 'Independent inspections and quality monitoring.', icon: Award },
-              { title: 'Visibility', desc: 'Track progress, materials and milestones.', icon: Search },
+              { title: 'Transparency', desc: 'Clear information at every step.', icon: Eye },
+              { title: 'Competition', desc: 'Multiple bids for better value.', icon: TrendingUp },
+              { title: 'Verification', desc: 'Eligible professionals only.', icon: Shield },
+              { title: 'Choice', desc: 'You choose your contractor.', icon: Users },
+              { title: 'Quality', desc: 'Independent monitoring support.', icon: Award },
+              { title: 'Visibility', desc: 'Track progress and quality.', icon: Zap },
             ].map((item, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 border border-border-light hover:shadow-md transition-shadow">
-                <div className="w-11 h-11 bg-orange/10 rounded-xl flex items-center justify-center mb-4">
-                  <item.icon size={20} className="text-orange" />
+              <div key={i} className="bg-white rounded-2xl p-6 border border-border card-shadow">
+                <div className="w-10 h-10 bg-blue/10 rounded-xl flex items-center justify-center mb-4">
+                  <item.icon size={18} className="text-blue" />
                 </div>
                 <h3 className="text-base font-bold text-navy">{item.title}</h3>
-                <p className="mt-2 text-sm text-navy-light/70 leading-relaxed">{item.desc}</p>
+                <p className="mt-2 text-sm text-text-muted">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* QUALITY ASSURANCE */}
+      {/* Quality Assurance */}
       <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -308,80 +350,126 @@ export default function Home() {
               <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">
                 Don't Just Track Progress.<br />Check Quality.
               </h2>
-              <p className="mt-4 text-navy-light/70 leading-relaxed">
+              <p className="mt-4 text-text-muted leading-relaxed">
                 BuildSure supports independent project monitoring and inspections at key construction stages. Problems are easier to fix when they are found early.
               </p>
               <div className="mt-6 grid grid-cols-2 gap-3">
-                {['Site Inspections', 'Material Verification', 'Milestone Tracking', 'Progress Photos', 'Quality Issues', 'Corrective Actions', 'Reinspection', 'Final Handover'].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2 p-2.5 bg-grey-light rounded-lg">
-                    <CheckCircle size={14} className="text-green shrink-0" />
-                    <span className="text-xs font-medium text-navy">{item}</span>
+                {['Site Inspections', 'Material Verification', 'Milestone Tracking', 'Progress Photos', 'Quality Issues', 'Final Handover'].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <CheckCircle size={14} className="text-teal shrink-0" />
+                    <span className="text-sm text-text">{item}</span>
                   </div>
                 ))}
               </div>
-              <Link to="/quality-assurance" className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-orange hover:text-orange-dark transition-colors">
-                Explore Quality Assurance <ArrowRight size={14} />
-              </Link>
+              <div className="mt-8">
+                <Link to="/quality-assurance" className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-navy border-2 border-navy hover:bg-navy hover:text-white rounded-xl transition-all">
+                  Explore Quality Assurance <ArrowRight size={14} />
+                </Link>
+              </div>
             </div>
-            {/* Quality Issue Workflow */}
-            <div className="bg-grey-light rounded-2xl p-8 border border-border-light">
-              <h3 className="text-base font-bold text-navy mb-6">Quality Issue Workflow</h3>
+
+            {/* Quality Workflow */}
+            <div className="bg-bg rounded-2xl p-6 border border-border">
+              <h3 className="text-sm font-bold text-navy mb-4">Quality Issue Workflow</h3>
               <div className="space-y-3">
                 {[
-                  { label: 'Issue Found', color: 'bg-red-100 text-red-700' },
-                  { label: 'Assigned', color: 'bg-orange/10 text-orange' },
-                  { label: 'Corrective Action', color: 'bg-blue-100 text-blue-700' },
-                  { label: 'Reinspection', color: 'bg-purple-100 text-purple-700' },
-                  { label: 'Closed', color: 'bg-green/10 text-green' },
+                  { label: 'Issue Found', color: 'bg-orange/10 border-orange/20', dot: 'bg-orange' },
+                  { label: 'Assigned', color: 'bg-blue/5 border-blue/10', dot: 'bg-blue' },
+                  { label: 'Corrective Action', color: 'bg-teal/5 border-teal/10', dot: 'bg-teal' },
+                  { label: 'Reinspection', color: 'bg-navy/5 border-navy/10', dot: 'bg-navy' },
+                  { label: 'Closed', color: 'bg-green/5 border-green/20', dot: 'bg-green' },
                 ].map((step, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <span className={`text-xs font-semibold px-3 py-1.5 rounded-lg ${step.color}`}>{step.label}</span>
-                    {i < 4 && <div className="flex-1 h-px bg-border-light"></div>}
+                  <div key={i} className={`flex items-center gap-3 p-3 rounded-lg border ${step.color}`}>
+                    <div className={`w-2.5 h-2.5 rounded-full ${step.dot}`}></div>
+                    <span className="text-xs font-medium text-text">{step.label}</span>
                   </div>
                 ))}
               </div>
-              <p className="mt-6 text-xs text-gray-500">
-                BuildSure creates visibility around quality issues instead of letting them disappear into conversations.
-              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ARCHITECT PARTNERSHIP */}
-      <section className="py-16 lg:py-20 bg-grey-light border-y border-border-light">
+      {/* Architect Partnership */}
+      <section className="py-16 lg:py-20 bg-bg border-y border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">Design. Plan. Tender. Build.</h2>
-          <p className="mt-3 text-navy-light/70 max-w-xl mx-auto">
+          <p className="mt-3 text-text-muted max-w-xl mx-auto">
             Join the BuildSure professional network and contribute your expertise across the construction lifecycle.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            {['Architectural Design', 'Structural Design', 'BOQ Preparation', 'Tender Support', 'Quality Inspection', 'Project Monitoring', 'Final Handover'].map((item, i) => (
-              <span key={i} className="px-4 py-2 bg-white text-navy text-sm font-medium rounded-lg border border-border-light">
-                {item}
-              </span>
-            ))}
-          </div>
           <div className="mt-8">
-            <Link to="/architect-partnership" className="inline-flex items-center gap-2 px-6 py-3.5 text-base font-semibold text-white bg-navy hover:bg-navy-light rounded-xl transition-all">
+            <Link to="/architect-partnership" className="inline-flex items-center gap-2 px-7 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
               Join the Partnership <ArrowRight size={18} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* LOCATION */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl font-bold text-navy">Starting in Lucknow</h2>
-          <p className="mt-3 text-navy-light/70 max-w-lg mx-auto">
-            We're building BuildSure with local construction requirements, contractors and professionals in mind — starting with Lucknow.
-          </p>
-          <div className="mt-8">
-            <Link to="/get-started" className="inline-flex items-center gap-2 px-7 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
-              Join the Lucknow Launch <ArrowRight size={18} />
+      {/* Who It's For */}
+      <section className="py-16 lg:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">Who BuildSure Is For</h2>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: 'Client', desc: 'Plan, compare and monitor your construction project.', icon: Users, color: 'bg-orange/10', iconColor: 'text-orange' },
+              { title: 'Contractor', desc: 'Find relevant projects and submit competitive bids.', icon: HardHat, color: 'bg-navy/5', iconColor: 'text-navy' },
+              { title: 'Architect / Engineer', desc: 'Bring professional expertise into better-managed projects.', icon: Ruler, color: 'bg-blue/10', iconColor: 'text-blue' },
+              { title: 'Quality Inspector', desc: 'Inspect, document and improve construction quality.', icon: Eye, color: 'bg-teal/10', iconColor: 'text-teal' },
+            ].map((role, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 border border-border card-shadow text-center">
+                <div className={`w-12 h-12 ${role.color} rounded-xl flex items-center justify-center mx-auto mb-4`}>
+                  <role.icon size={20} className={role.iconColor} />
+                </div>
+                <h3 className="text-base font-bold text-navy">{role.title}</h3>
+                <p className="mt-2 text-sm text-text-muted">{role.desc}</p>
+                <Link to="/get-started" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-orange hover:text-orange-dark transition-colors">
+                  Join BuildSure <ArrowRight size={12} />
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-16 lg:py-20 bg-bg border-t border-border">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-navy text-center mb-8">Frequently Asked Questions</h2>
+          <div className="space-y-3">
+            {faqs.map((faq, i) => (
+              <div key={i} className="bg-white border border-border rounded-xl overflow-hidden">
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between p-5 text-left hover:bg-bg transition-colors"
+                  aria-expanded={openFaq === i}
+                >
+                  <span className="text-sm font-semibold text-navy pr-4">{faq.q}</span>
+                  <ChevronDown size={18} className={`text-text-muted shrink-0 transition-transform ${openFaq === i ? 'rotate-180' : ''}`} />
+                </button>
+                {openFaq === i && (
+                  <div className="px-5 pb-5">
+                    <p className="text-sm text-text-muted leading-relaxed">{faq.a}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link to="/faq" className="text-sm font-semibold text-blue hover:text-navy transition-colors">
+              View All FAQs →
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Location */}
+      <section className="py-12 bg-white border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-xl font-bold text-navy">Starting in Lucknow</h2>
+          <p className="mt-2 text-sm text-text-muted">Building with local construction requirements, contractors and professionals in mind.</p>
         </div>
       </section>
     </div>
