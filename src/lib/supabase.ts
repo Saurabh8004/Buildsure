@@ -50,11 +50,42 @@ export const supabase = createClient(
   }
 );
 
-// Helper function to check if Supabase is configured
+// Helper function to check if Supabase is configured with REAL credentials
 export function isSupabaseConfigured(): boolean {
-  return Boolean(supabaseUrl && supabaseAnonKey && 
-    supabaseUrl !== 'https://your-project.supabase.co' &&
-    supabaseAnonKey !== 'your-anon-key');
+  if (!supabaseUrl || !supabaseAnonKey) return false;
+  
+  // Check for known placeholder values
+  const placeholderUrls = [
+    'https://your-project.supabase.co',
+    'https://your-project-id.supabase.co',
+  ];
+  const placeholderKeys = [
+    'your-anon-key',
+    'your-anon-key-here',
+    'your-anon-public-key-here',
+  ];
+  
+  if (placeholderUrls.includes(supabaseUrl)) return false;
+  if (placeholderKeys.includes(supabaseAnonKey)) return false;
+  
+  // Check for valid URL format
+  if (!supabaseUrl.includes('.supabase.co')) return false;
+  
+  // Check for valid JWT format (anon keys start with eyJ)
+  if (!supabaseAnonKey.startsWith('eyJ')) return false;
+  
+  return true;
+}
+
+// Get masked URL for display (never expose full URL in logs)
+export function getMaskedConfig() {
+  return {
+    url: supabaseUrl ? `${supabaseUrl.substring(0, 25)}...` : 'NOT SET',
+    key: supabaseAnonKey && supabaseAnonKey.startsWith('eyJ') 
+      ? `${supabaseAnonKey.substring(0, 20)}...` 
+      : supabaseAnonKey ? 'INVALID FORMAT' : 'NOT SET',
+    isConfigured: isSupabaseConfigured(),
+  };
 }
 
 // Type definitions

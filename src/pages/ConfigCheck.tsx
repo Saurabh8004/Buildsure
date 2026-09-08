@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, XCircle, AlertCircle, Loader } from 'lucide-react';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { supabase, isSupabaseConfigured, getMaskedConfig } from '../lib/supabase';
 import { authService } from '../lib/auth';
 
 interface CheckResult {
@@ -33,15 +33,20 @@ export default function ConfigCheck() {
     setChecks([...results]);
 
     const isConfigured = isSupabaseConfigured();
+    const maskedConfig = getMaskedConfig();
     results[0] = {
       name: 'Environment Variables',
       status: isConfigured ? 'pass' : 'fail',
       message: isConfigured
         ? 'Supabase URL and anon key are configured'
-        : 'VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are missing or invalid',
+        : 'VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are missing or contain placeholder values',
       details: isConfigured
-        ? `URL: ${import.meta.env.VITE_SUPABASE_URL}`
-        : 'Please create a .env file with your Supabase credentials',
+        ? `URL: ${maskedConfig.url}\nKey: ${maskedConfig.key}`
+        : !import.meta.env.VITE_SUPABASE_URL 
+          ? 'VITE_SUPABASE_URL is not set. Create a .env file with your Supabase URL.'
+          : !import.meta.env.VITE_SUPABASE_ANON_KEY
+          ? 'VITE_SUPABASE_ANON_KEY is not set. Create a .env file with your Supabase anon key.'
+          : 'Environment variables contain placeholder values. Replace with your real Supabase credentials from Settings → API.',
     };
     setChecks([...results]);
 

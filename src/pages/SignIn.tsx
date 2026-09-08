@@ -1,18 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function SignIn() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { login, register, user } = useAuth();
+  const { login, register, user, loading: authLoading } = useAuth();
   
   const role = searchParams.get('role') || '';
   const [isSignUp, setIsSignUp] = useState(!role ? false : true);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -20,6 +21,14 @@ export default function SignIn() {
     password: '',
     role: role,
   });
+
+  // Navigate when user is authenticated — NO setTimeout hack
+  useEffect(() => {
+    if (user && !authLoading) {
+      const dashboardPath = user.role === 'admin' ? '/admin' : `/dashboard/${user.role}`;
+      navigate(dashboardPath, { replace: true });
+    }
+  }, [user, authLoading, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -29,34 +38,42 @@ export default function SignIn() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
     setLoading(true);
 
     try {
       if (isSignUp) {
+        if (!form.role) {
+          setError('Please select a role.');
+          setLoading(false);
+          return;
+        }
+        if (!form.name.trim()) {
+          setError('Please enter your full name.');
+          setLoading(false);
+          return;
+        }
+        if (form.password.length < 6) {
+          setError('Password must be at least 6 characters long.');
+          setLoading(false);
+          return;
+        }
+
         await register({
           email: form.email,
           password: form.password,
           fullName: form.name,
           mobile: form.mobile || undefined,
-          role: form.role as any,
+          role: form.role as 'client' | 'contractor' | 'architect' | 'inspector',
         });
+        setSuccessMessage('Account created! Redirecting to your dashboard...');
       } else {
         await login(form.email, form.password);
+        setSuccessMessage('Welcome back! Redirecting...');
       }
-      
-      // Wait a bit for user data to be loaded, then navigate based on actual user role
-      setTimeout(() => {
-        if (user) {
-          const dashboardPath = user.role === 'admin' ? '/admin' : `/dashboard/${user.role}`;
-          navigate(dashboardPath);
-        } else {
-          // Fallback to form role if user not loaded yet
-          const userRole = form.role || 'client';
-          const dashboardPath = userRole === 'admin' ? '/admin' : `/dashboard/${userRole}`;
-          navigate(dashboardPath);
-        }
-      }, 500);
+      // Navigation handled by useEffect above — deterministic, no setTimeout
     } catch (err: any) {
+      console.error('[SignIn] Auth error:', err);
       setError(err.message || 'Authentication failed. Please try again.');
       setLoading(false);
     }
@@ -94,17 +111,32 @@ export default function SignIn() {
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
               <AlertCircle size={18} className="text-red-600 shrink-0 mt-0.5" />
-              <p className="text-sm text-red-700">{error}</p>
+              <div>
+                <p className="text-sm text-red-700 font-medium">{error}</p>
+                {error.includes('connect') && (
+                  <p className="text-xs text-red-600 mt-1">
+                    Check your Supabase configuration at <Link to="/config-check" className="underline font-medium">/config-check</Link>
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl flex items-center gap-3">
+              <Loader2 size={18} className="text-green-600 shrink-0 animate-spin" />
+              <p className="text-sm text-green-700">{successMessage}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-6 sm:p-8 border border-border shadow-sm space-y-5">
             {(isSignUp || role) && (
               <div>
-                <label htmlFor="role" className="block text-sm font-medium text-text mb-2">Role</label>
+                <label htmlFor="role" className="block text-sm font-medium text-text mb-2">Role *</label>
                 <select
                   id="role"
                   name="role"
+                  required
                   value={form.role}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors bg-white"
@@ -120,22 +152,23 @@ export default function SignIn() {
 
             {isSignUp && (
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-text mb-2">Full Name</label>
+                <label htmlFor="name" className="block text-sm font-medium text-text mb-2">Full Name *</label>
                 <input
                   type="text"
                   id="name"
                   name="name"
-                  required={isSignUp}
+                  required
                   value={form.name}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
                   placeholder="Your full name"
+                  autoComplete="name"
                 />
               </div>
             )}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-text mb-2">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-text mb-2">Email *</label>
               <input
                 type="email"
                 id="email"
@@ -145,6 +178,7 @@ export default function SignIn() {
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
                 placeholder="your@email.com"
+                autoComplete="email"
               />
             </div>
 
@@ -155,27 +189,29 @@ export default function SignIn() {
                   type="tel"
                   id="mobile"
                   name="mobile"
-                  required={isSignUp}
                   value={form.mobile}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
                   placeholder="+91 XXXXX XXXXX"
+                  autoComplete="tel"
                 />
               </div>
             )}
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-text mb-2">Password</label>
+              <label htmlFor="password" className="block text-sm font-medium text-text mb-2">Password *</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"
                   required
+                  minLength={6}
                   value={form.password}
                   onChange={handleChange}
                   className="w-full px-4 py-3 pr-11 border border-border rounded-xl text-sm text-text focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-colors"
-                  placeholder="••••••••"
+                  placeholder="Minimum 6 characters"
+                  autoComplete={isSignUp ? 'new-password' : 'current-password'}
                 />
                 <button
                   type="button"
@@ -190,16 +226,23 @@ export default function SignIn() {
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full py-3.5 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading || authLoading}
+              className="w-full py-3.5 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {loading ? 'Please wait...' : (isSignUp ? 'Create Account' : 'Sign In')}
+              {(loading || authLoading) ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  {isSignUp ? 'Creating Account...' : 'Signing In...'}
+                </>
+              ) : (
+                isSignUp ? 'Create Account' : 'Sign In'
+              )}
             </button>
 
             <div className="text-center">
               <button
                 type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
+                onClick={() => { setIsSignUp(!isSignUp); setError(''); }}
                 className="text-sm text-text-muted hover:text-secondary transition-colors"
               >
                 {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
@@ -214,6 +257,12 @@ export default function SignIn() {
               </Link>
             </div>
           )}
+
+          <div className="text-center mt-4">
+            <Link to="/config-check" className="text-xs text-text-muted hover:text-secondary transition-colors">
+              Configuration Check
+            </Link>
+          </div>
         </div>
       </div>
     </div>
