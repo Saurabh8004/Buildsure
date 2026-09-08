@@ -18,6 +18,10 @@ import SignIn from './pages/SignIn';
 import Projects from './pages/Projects';
 import Contractors from './pages/Contractors';
 import AdminDashboard from './pages/AdminDashboard';
+import ContractorDashboard from './pages/ContractorDashboard';
+import ClientDashboard from './pages/ClientDashboard';
+import ArchitectDashboard from './pages/ArchitectDashboard';
+import InspectorDashboard from './pages/InspectorDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 
 export default function App() {
@@ -44,6 +48,40 @@ export default function App() {
         </Route>
         <Route path="/get-started" element={<GetStarted />} />
         <Route path="/signin" element={<SignIn />} />
+        
+        {/* Dashboard Routes */}
+        <Route
+          path="/dashboard/contractor"
+          element={
+            <ProtectedRoute requiredRole="contractor">
+              <ContractorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/client"
+          element={
+            <ProtectedRoute requiredRole="client">
+              <ClientDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/architect"
+          element={
+            <ProtectedRoute requiredRole="architect">
+              <ArchitectDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard/inspector"
+          element={
+            <ProtectedRoute requiredRole="inspector">
+              <InspectorDashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin"
           element={

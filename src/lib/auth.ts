@@ -19,6 +19,7 @@ export const authService = {
   async register(data: RegisterData) {
     const { email, password, fullName, mobile, role } = data;
 
+    // Step 1: Create auth user
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -33,9 +34,11 @@ export const authService = {
     if (authError) throw authError;
     if (!authData.user) throw new Error('Registration failed');
 
+    // Step 2: Create user profile in users table
+    // Note: This might also be handled by the database trigger, but we ensure it exists
     const { error: userError } = await supabase
       .from('users')
-      .insert({
+      .upsert({
         id: authData.user.id,
         email,
         full_name: fullName,
@@ -45,10 +48,25 @@ export const authService = {
         verification_status: role === 'client' ? 'unverified' : 'pending',
       });
 
-    if (userError) throw userError;
+    if (userError) {
+      console.error('Error creating user profile:', userError);
+      // Don't throw here - the trigger might have already created it
+    }
 
-    await this.createRoleProfile(authData.user.id, role);
-    await this.logAudit(authData.user.id, 'USER_REGISTERED', 'user', authData.user.id, { role });
+    // Step 3: Create role-specific profile
+    try {
+      await this.createRoleProfile(authData.user.id, role);
+    } catch (profileError) {
+      console.error('Error creating role profile:', profileError);
+      // Don't throw - user can complete profile later
+    }
+
+    // Step 4: Log audit event
+    try {
+      await this.logAudit(authData.user.id, 'USER_REGISTERED', 'user', authData.user.id, { role });
+    } catch (auditError) {
+      console.error('Error logging audit:', auditError);
+    }
 
     return { user: authData.user };
   },
@@ -56,13 +74,17 @@ export const authService = {
   async createRoleProfile(userId: string, role: UserRole) {
     switch (role) {
       case 'client':
-        await supabase.from('client_profiles').insert({ user_id: userId });
+        await supabase.from('client_profiles').upsert({ user_id: userId });
         break;
       case 'contractor':
-        await supabase.from('contractor_profiles').insert({
+        await supabase.from('contractor_profiles').upsert({
           user_id: userId,
           verification_status: 'pending',
         });
+        break;
+      case 'architect':
+      case 'inspector':
+        // These would have their own profile tables in production
         break;
     }
   },
@@ -78,7 +100,12 @@ export const authService = {
     if (error) throw error;
     if (!authData.user) throw new Error('Login failed');
 
-    await this.logAudit(authData.user.id, 'LOGIN_SUCCESS', 'user', authData.user.id);
+    // Log audit event
+    try {
+      await this.logAudit(authData.user.id, 'LOGIN_SUCCESS', 'user', authData.user.id);
+    } catch (auditError) {
+      console.error('Error logging audit:', auditError);
+    }
 
     return { user: authData.user, session: authData.session };
   },
@@ -98,13 +125,51 @@ export const authService = {
     
     if (!user) return null;
 
+    // Fetch user profile
     const { data: profile, error } = await supabase
       .from('users')
       .select('*')
       .eq('id', user.id)
       .single();
 
-    if (error || !profile) return null;
+    // If profile doesn't exist, create it (for users created before trigger was added)
+    if (error || !profile) {
+      console.log('Profile not found, creating...');
+      
+      const role = (user.user_metadata?.role as UserRole) || 'client';
+      const fullName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+      
+      const { data: newProfile, error: createError } = await supabase
+        .from('users')
+        .upsert({
+          id: user.id,
+          email: user.email || '',
+          full_name: fullName,
+          mobile: null,
+          role,
+          account_status: 'active',
+          verification_status: role === 'client' ? 'unverified' : 'pending',
+        })
+        .select()
+        .single();
+
+      if (createError) {
+        console.error('Error creating profile:', createError);
+        return null;
+      }
+
+      // Create role-specific profile
+      try {
+        await this.createRoleProfile(user.id, role);
+      } catch (profileError) {
+        console.error('Error creating role profile:', profileError);
+      }
+
+      return {
+        auth: user,
+        profile: newProfile as User,
+      };
+    }
 
     return {
       auth: user,

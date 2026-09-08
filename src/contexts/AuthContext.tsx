@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { authService } from '../lib/auth';
-import { User } from '../lib/supabase';
+import { User, supabase } from '../lib/supabase';
 
 interface AuthContextType {
   user: User | null;
@@ -24,6 +24,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     checkUser();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        checkUser();
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   async function checkUser() {
@@ -32,6 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(currentUser?.profile || null);
     } catch (error) {
       console.error('Auth check error:', error);
+      setUser(null);
     } finally {
       setLoading(false);
     }

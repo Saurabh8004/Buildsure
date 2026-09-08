@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 export default function SignIn() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { login, register } = useAuth();
+  const { login, register, user } = useAuth();
   
   const role = searchParams.get('role') || '';
   const [isSignUp, setIsSignUp] = useState(!role ? false : true);
@@ -44,12 +44,20 @@ export default function SignIn() {
         await login(form.email, form.password);
       }
       
-      // Redirect based on role
-      const userRole = form.role || 'client';
-      navigate(`/dashboard/${userRole}`);
+      // Wait a bit for user data to be loaded, then navigate based on actual user role
+      setTimeout(() => {
+        if (user) {
+          const dashboardPath = user.role === 'admin' ? '/admin' : `/dashboard/${user.role}`;
+          navigate(dashboardPath);
+        } else {
+          // Fallback to form role if user not loaded yet
+          const userRole = form.role || 'client';
+          const dashboardPath = userRole === 'admin' ? '/admin' : `/dashboard/${userRole}`;
+          navigate(dashboardPath);
+        }
+      }, 500);
     } catch (err: any) {
       setError(err.message || 'Authentication failed. Please try again.');
-    } finally {
       setLoading(false);
     }
   };
