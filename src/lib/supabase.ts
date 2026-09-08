@@ -1,0 +1,137 @@
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://your-project.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'your-anon-key';
+
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+  },
+});
+
+// Type definitions
+export interface User {
+  id: string;
+  email: string;
+  full_name: string;
+  mobile: string | null;
+  role: 'client' | 'contractor' | 'architect' | 'inspector' | 'admin';
+  account_status: 'active' | 'suspended' | 'pending_verification';
+  verification_status: 'unverified' | 'pending' | 'verified' | 'rejected';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ClientProfile {
+  id: string;
+  user_id: string;
+  city: string | null;
+  project_preferences: string[] | null;
+  budget_range_min: number | null;
+  budget_range_max: number | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ContractorProfile {
+  id: string;
+  user_id: string;
+  company_name: string | null;
+  business_type: string | null;
+  year_established: number | null;
+  office_location: string | null;
+  service_areas: string[] | null;
+  specialization: string | null;
+  project_types: string[] | null;
+  years_of_experience: number | null;
+  completed_projects: number | null;
+  verification_status: 'pending' | 'under_review' | 'verified' | 'action_required' | 'rejected' | 'suspended';
+  verification_submitted_at: string | null;
+  verification_reviewed_at: string | null;
+  verification_notes: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Project {
+  id: string;
+  client_id: string;
+  title: string;
+  project_type: string;
+  location: string;
+  locality: string | null;
+  area_sqft: number | null;
+  budget_min: number | null;
+  budget_max: number | null;
+  description: string | null;
+  status: 'draft' | 'active' | 'tender_created' | 'bidding_open' | 'bidding_closed' | 'evaluation' | 'awarded' | 'in_progress' | 'completed' | 'cancelled';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Tender {
+  id: string;
+  project_id: string;
+  title: string;
+  description: string | null;
+  deadline: string;
+  status: 'draft' | 'under_review' | 'published' | 'closed' | 'evaluation' | 'awarded' | 'cancelled';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Bid {
+  id: string;
+  tender_id: string;
+  contractor_id: string;
+  version: number;
+  total_amount: number;
+  timeline_months: number;
+  warranty_years: number;
+  inclusions: string | null;
+  exclusions: string | null;
+  notes: string | null;
+  status: 'draft' | 'submitted' | 'locked' | 'shortlisted' | 'final_offer' | 'selected' | 'rejected';
+  submitted_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Document {
+  id: string;
+  user_id: string;
+  entity_type: 'user' | 'project' | 'tender' | 'bid';
+  entity_id: string;
+  document_type: string;
+  file_name: string;
+  file_path: string;
+  file_size: number;
+  mime_type: string;
+  verification_status: 'pending' | 'verified' | 'rejected';
+  uploaded_at: string;
+}
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  type: string;
+  title: string;
+  message: string;
+  entity_type: string | null;
+  entity_id: string | null;
+  read: boolean;
+  created_at: string;
+}
+
+export interface AuditLog {
+  id: string;
+  user_id: string | null;
+  action: string;
+  entity_type: string;
+  entity_id: string | null;
+  metadata: any;
+  ip_address: string | null;
+  created_at: string;
+}
