@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
-import Home from './pages/Home';
+import Home from './pages/HomeAnimated';
+import PageLoader from './components/PageLoader';
 import HowItWorks from './pages/HowItWorks';
 import ForClients from './pages/ForClients';
 import ForContractors from './pages/ForContractors';
@@ -31,6 +32,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 export default function App() {
   return (
     <BrowserRouter>
+      <PageLoader />
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
