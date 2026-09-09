@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ArrowRight, Users, HardHat, Ruler, Eye } from 'lucide-react';
 
 const roles = [
@@ -56,48 +57,76 @@ export default function GetStarted() {
           {/* Logo */}
           <div className="text-center mb-10">
             <Link to="/" className="inline-flex items-center gap-2.5 mb-6">
-              <div className="w-10 h-10 bg-navy rounded-xl flex items-center justify-center">
+              <motion.div
+                whileHover={{ rotate: 5 }}
+                transition={{ duration: 0.3 }}
+                className="w-10 h-10 bg-navy rounded-xl flex items-center justify-center"
+              >
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 21h18" />
                   <path d="M5 21V7l7-4 7 4v14" />
                   <path d="M9 21v-6h6v6" />
                 </svg>
-              </div>
+              </motion.div>
               <span className="text-2xl font-bold text-navy tracking-tight">Construct<span className="text-orange">Bid</span></span>
             </Link>
-            <h1 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">How will you use ConstructBid?</h1>
-            <p className="mt-2 text-text-muted">Select your role to get started.</p>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-2xl sm:text-3xl font-bold text-navy tracking-tight"
+            >
+              How will you use ConstructBid?
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="mt-2 text-text-muted"
+            >
+              Select your role to get started.
+            </motion.p>
           </div>
 
           {/* Role Cards */}
           <div className="grid sm:grid-cols-2 gap-4">
-            {roles.map((role) => (
-              <Link
+            {roles.map((role, i) => (
+              <motion.div
                 key={role.id}
-                to={`/signin?role=${role.id}`}
-                className={`group p-6 rounded-2xl border ${role.color} bg-white hover:shadow-lg transition-all hover:-translate-y-0.5`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
               >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${role.iconColor} bg-bg`}>
-                  <role.icon size={22} />
-                </div>
-                <h3 className="text-lg font-bold text-navy">{role.title}</h3>
-                <p className="mt-1 text-sm text-text-muted">{role.desc}</p>
-                <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-orange group-hover:gap-2 transition-all">
-                  {role.cta} <ArrowRight size={14} />
-                </div>
-              </Link>
+                <Link
+                  to={`/signin?role=${role.id}`}
+                  className={`group p-6 rounded-2xl border ${role.color} bg-white hover:shadow-lg transition-all hover:-translate-y-0.5 block`}
+                >
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${role.iconColor} bg-bg`}>
+                    <role.icon size={22} />
+                  </div>
+                  <h3 className="text-lg font-bold text-navy">{role.title}</h3>
+                  <p className="mt-1 text-sm text-text-muted">{role.desc}</p>
+                  <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-orange group-hover:gap-2 transition-all">
+                    {role.cta} <ArrowRight size={14} />
+                  </div>
+                </Link>
+              </motion.div>
             ))}
           </div>
 
           {/* Sign in link */}
-          <div className="text-center mt-8">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-center mt-8"
+          >
             <p className="text-sm text-text-muted">
               Already have an account?{' '}
               <Link to="/signin" className="font-semibold text-blue hover:text-navy transition-colors">
                 Sign In
               </Link>
             </p>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

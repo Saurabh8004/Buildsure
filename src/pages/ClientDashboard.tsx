@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Briefcase, FileText, CheckCircle, Clock } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { projectService } from '../lib/services';
@@ -50,29 +51,45 @@ export default function ClientDashboard() {
   return (
     <div className="min-h-screen bg-bg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8 flex items-start justify-between">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 flex items-start justify-between"
+        >
           <div>
             <h1 className="text-3xl font-bold text-navy">Client Dashboard</h1>
             <p className="text-text-muted mt-1">Welcome back, {user?.full_name}</p>
           </div>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => navigate('/projects/new')}
             className="px-6 py-3 text-sm font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20"
           >
             Post New Project
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl border border-border p-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white rounded-2xl border border-border p-6"
+          >
             <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center mb-4">
               <Briefcase size={22} className="text-secondary" />
             </div>
             <p className="text-text-muted text-sm">Total Projects</p>
             <p className="text-3xl font-bold text-navy mt-1">{projects.length}</p>
-          </div>
-          <div className="bg-white rounded-2xl border border-border p-6">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-2xl border border-border p-6"
+          >
             <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center mb-4">
               <FileText size={22} className="text-accent" />
             </div>
@@ -80,8 +97,13 @@ export default function ClientDashboard() {
             <p className="text-3xl font-bold text-navy mt-1">
               {projects.filter(p => ['active', 'tender_created', 'bidding_open'].includes(p.status)).length}
             </p>
-          </div>
-          <div className="bg-white rounded-2xl border border-border p-6">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white rounded-2xl border border-border p-6"
+          >
             <div className="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center mb-4">
               <CheckCircle size={22} className="text-success" />
             </div>
@@ -89,8 +111,13 @@ export default function ClientDashboard() {
             <p className="text-3xl font-bold text-navy mt-1">
               {projects.filter(p => p.status === 'awarded').length}
             </p>
-          </div>
-          <div className="bg-white rounded-2xl border border-border p-6">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white rounded-2xl border border-border p-6"
+          >
             <div className="w-12 h-12 bg-orange/10 rounded-xl flex items-center justify-center mb-4">
               <Clock size={22} className="text-orange" />
             </div>
@@ -98,30 +125,40 @@ export default function ClientDashboard() {
             <p className="text-3xl font-bold text-navy mt-1">
               {projects.filter(p => p.status === 'completed').length}
             </p>
-          </div>
+          </motion.div>
         </div>
 
         {/* Recent Projects */}
-        <div className="bg-white rounded-2xl border border-border p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="bg-white rounded-2xl border border-border p-6"
+        >
           <h2 className="text-xl font-bold text-navy mb-4">Your Projects</h2>
           {projects.length === 0 ? (
             <div className="text-center py-12">
               <Briefcase size={48} className="text-text-muted mx-auto mb-4" />
               <p className="text-text-muted">No projects yet</p>
               <p className="text-sm text-text-muted mt-2">Post your first construction project to get started</p>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => navigate('/projects/new')}
                 className="mt-4 px-6 py-2.5 text-sm font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all"
               >
                 Post Your First Project
-              </button>
+              </motion.button>
             </div>
           ) : (
             <div className="space-y-3">
               {projects.slice(0, 5).map((project) => (
-                <div 
-                  key={project.id} 
-                  className="p-4 bg-bg rounded-xl border border-border hover:border-navy/20 hover:shadow-md transition-all cursor-pointer"
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  whileHover={{ x: 8 }}
+                  className="p-4 bg-bg rounded-xl border border-border cursor-pointer transition-all"
                   onClick={() => navigate(`/projects/${project.id}`)}
                 >
                   <div className="flex items-start justify-between">
@@ -149,11 +186,11 @@ export default function ClientDashboard() {
                       </span>
                     )}
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

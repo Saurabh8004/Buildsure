@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { supabase } from '../lib/supabase';
-import { ArrowLeft, MapPin, Briefcase, CheckCircle, Shield } from 'lucide-react';
+import { ArrowLeft, MapPin, Briefcase, Award, CheckCircle, Shield } from 'lucide-react';
 
 export default function ContractorProfile() {
   const { id } = useParams<{ id: string }>();
@@ -21,7 +22,6 @@ export default function ContractorProfile() {
     if (!id) return;
     
     try {
-      // Load contractor profile
       const { data: contractorProfile, error: profileError } = await supabase
         .from('contractor_profiles')
         .select('*')
@@ -31,7 +31,6 @@ export default function ContractorProfile() {
       if (profileError) throw profileError;
       setProfile(contractorProfile);
 
-      // Load user information
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select('full_name, email')
@@ -85,7 +84,11 @@ export default function ContractorProfile() {
         </div>
 
         {/* Profile Card */}
-        <div className="bg-white rounded-2xl border border-border p-6 sm:p-8 mb-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-2xl border border-border p-6 sm:p-8 mb-6"
+        >
           <div className="flex items-start justify-between mb-6">
             <div>
               <h1 className="text-3xl font-bold text-navy">
@@ -96,59 +99,89 @@ export default function ContractorProfile() {
               )}
             </div>
             {profile.verification_status === 'verified' && (
-              <span className="flex items-center gap-1 px-3 py-1.5 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring' }}
+                className="flex items-center gap-1 px-3 py-1.5 bg-green-100 text-green-700 text-sm font-semibold rounded-full"
+              >
                 <Shield size={14} /> Verified
-              </span>
+              </motion.span>
             )}
           </div>
 
           {/* Info Grid */}
           <div className="grid sm:grid-cols-2 gap-4">
             {profile.office_location && (
-              <div className="flex items-start gap-3 p-4 bg-bg rounded-xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="flex items-start gap-3 p-4 bg-bg rounded-xl"
+              >
                 <MapPin size={18} className="text-blue shrink-0 mt-0.5" />
                 <div>
                   <p className="text-xs text-text-muted mb-1">Location</p>
                   <p className="font-semibold text-navy">{profile.office_location}</p>
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {profile.specialization && (
-              <div className="flex items-start gap-3 p-4 bg-bg rounded-xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="flex items-start gap-3 p-4 bg-bg rounded-xl"
+              >
                 <Briefcase size={18} className="text-orange shrink-0 mt-0.5" />
                 <div>
                   <p className="text-xs text-text-muted mb-1">Specialization</p>
                   <p className="font-semibold text-navy">{profile.specialization}</p>
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {profile.years_of_experience && (
-              <div className="flex items-start gap-3 p-4 bg-bg rounded-xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="flex items-start gap-3 p-4 bg-bg rounded-xl"
+              >
                 <CheckCircle size={18} className="text-green shrink-0 mt-0.5" />
                 <div>
                   <p className="text-xs text-text-muted mb-1">Experience</p>
                   <p className="font-semibold text-navy">{profile.years_of_experience} years</p>
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {profile.completed_projects && (
-              <div className="flex items-start gap-3 p-4 bg-bg rounded-xl">
-                <Briefcase size={18} className="text-teal shrink-0 mt-0.5" />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex items-start gap-3 p-4 bg-bg rounded-xl"
+              >
+                <Award size={18} className="text-teal shrink-0 mt-0.5" />
                 <div>
                   <p className="text-xs text-text-muted mb-1">Completed Projects</p>
                   <p className="font-semibold text-navy">{profile.completed_projects}</p>
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
-        </div>
+        </motion.div>
 
         {/* Service Areas */}
         {profile.service_areas && profile.service_areas.length > 0 && (
-          <div className="bg-white rounded-2xl border border-border p-6 mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="bg-white rounded-2xl border border-border p-6 mb-6"
+          >
             <h2 className="text-xl font-bold text-navy mb-4">Service Areas</h2>
             <div className="flex flex-wrap gap-2">
               {profile.service_areas.map((area: string, i: number) => (
@@ -157,12 +190,17 @@ export default function ContractorProfile() {
                 </span>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Project Types */}
         {profile.project_types && profile.project_types.length > 0 && (
-          <div className="bg-white rounded-2xl border border-border p-6 mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="bg-white rounded-2xl border border-border p-6 mb-6"
+          >
             <h2 className="text-xl font-bold text-navy mb-4">Project Types</h2>
             <div className="flex flex-wrap gap-2">
               {profile.project_types.map((type: string, i: number) => (
@@ -171,11 +209,16 @@ export default function ContractorProfile() {
                 </span>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Verification Status */}
-        <div className="bg-white rounded-2xl border border-border p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+          className="bg-white rounded-2xl border border-border p-6"
+        >
           <h2 className="text-xl font-bold text-navy mb-4">Verification Status</h2>
           <div className="p-4 bg-bg rounded-xl">
             <div className="flex items-center gap-3">
@@ -191,11 +234,11 @@ export default function ContractorProfile() {
             </div>
             {profile.verification_status !== 'verified' && (
               <p className="text-sm text-text-muted mt-2">
-                This contractor is not yet verified. Verification status is managed by BuildSure administrators.
+                This contractor is not yet verified. Verification status is managed by ConstructBid administrators.
               </p>
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

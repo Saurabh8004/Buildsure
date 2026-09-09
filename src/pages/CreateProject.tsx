@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { projectService } from '../lib/services';
 import { ArrowLeft, ArrowRight, Save, CheckCircle } from 'lucide-react';
@@ -87,8 +88,13 @@ export default function CreateProject() {
           >
             <ArrowLeft size={16} /> Back to Dashboard
           </button>
-          <h1 className="text-3xl font-bold text-navy">Create New Project</h1>
-          <p className="text-text-muted mt-1">Tell us about your construction project</p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h1 className="text-3xl font-bold text-navy">Create New Project</h1>
+            <p className="text-text-muted mt-1">Tell us about your construction project</p>
+          </motion.div>
         </div>
 
         {/* Progress Indicator */}
@@ -117,7 +123,12 @@ export default function CreateProject() {
         </div>
 
         {/* Form */}
-        <div className="bg-white rounded-2xl border border-border p-6 sm:p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-white rounded-2xl border border-border p-6 sm:p-8"
+        >
           {step === 1 && (
             <div className="space-y-6">
               <div>
@@ -369,7 +380,7 @@ export default function CreateProject() {
               </div>
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, Loader2, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { ArrowLeft, CheckCircle, Loader2, Shield } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -33,12 +33,10 @@ export default function InspectionRequest() {
     setLoading(true);
 
     try {
-      // Verify user is authenticated
       if (!user) {
         throw new Error('You must be logged in to submit an inspection request');
       }
 
-      // Create inspection request in database
       const { data, error } = await supabase
         .from('inspection_requests')
         .insert({
@@ -303,7 +301,12 @@ export default function InspectionRequest() {
         </motion.form>
 
         {/* Info Box */}
-        <div className="mt-6 bg-teal/5 border border-teal/20 rounded-xl p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mt-6 bg-teal/5 border border-teal/20 rounded-xl p-6"
+        >
           <h3 className="font-bold text-navy mb-2">What happens next?</h3>
           <ol className="space-y-2 text-sm text-text-muted">
             <li>1. Our quality assurance team will review your request</li>
@@ -312,7 +315,7 @@ export default function InspectionRequest() {
             <li>4. You'll receive a detailed inspection report with findings</li>
             <li>5. Any issues will be tracked through our quality management system</li>
           </ol>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

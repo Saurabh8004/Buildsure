@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { CheckCircle, XCircle, AlertCircle, Loader } from 'lucide-react';
 import { supabase, isSupabaseConfigured, getMaskedConfig } from '../lib/supabase';
 import { authService } from '../lib/auth';
@@ -43,10 +44,10 @@ export default function ConfigCheck() {
       details: isConfigured
         ? `URL: ${maskedConfig.url}\nKey: ${maskedConfig.key}`
         : !import.meta.env.VITE_SUPABASE_URL 
-          ? 'VITE_SUPABASE_URL is not set. Create a .env file with your Supabase URL.'
-          : !import.meta.env.VITE_SUPABASE_ANON_KEY
-          ? 'VITE_SUPABASE_ANON_KEY is not set. Create a .env file with your Supabase anon key.'
-          : 'Environment variables contain placeholder values. Replace with your real Supabase credentials from Settings → API.',
+        ? 'VITE_SUPABASE_URL is not set. Create a .env file with your Supabase URL.'
+        : !import.meta.env.VITE_SUPABASE_ANON_KEY
+        ? 'VITE_SUPABASE_ANON_KEY is not set. Create a .env file with your Supabase anon key.'
+        : 'Environment variables contain placeholder values. Replace with your real Supabase credentials from Settings → API.',
     };
     setChecks([...results]);
 
@@ -172,7 +173,7 @@ export default function ConfigCheck() {
                     ? 'bg-green-50 border-green-200'
                     : check.status === 'fail'
                     ? 'bg-red-50 border-red-200'
-                    : 'bg-bg border-border'
+                    : 'bg-bg text-text-border'
                 }`}
               >
                 <div className="flex items-start gap-3">
@@ -216,7 +217,7 @@ export default function ConfigCheck() {
                     All Checks Passed!
                   </h2>
                   <p className="text-green-700 mb-4">
-                    BuildSure is properly configured and ready to use.
+                    ConstructBid is properly configured and ready to use.
                   </p>
                   <button
                     onClick={() => navigate('/')}
@@ -231,7 +232,7 @@ export default function ConfigCheck() {
                   <h2 className="text-xl font-bold text-red-900 mb-2 text-center">
                     Configuration Issues Found
                   </h2>
-                  <div className="text-sm text-red-700 space-y-3 mt-4">
+                  <div className="text-sm text-text-muted space-y-3 mt-4">
                     <div>
                       <strong>Next Steps:</strong>
                     </div>

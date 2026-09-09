@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { MapPin, Clock, ArrowRight, Filter, Building2, Shield, Search, X, ChevronDown, SlidersHorizontal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, Clock, ArrowRight, Filter, Building2, Shield, Search, X, ChevronDown } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -40,22 +40,18 @@ export default function Projects() {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>('newest');
   
-  // Filter states
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [selectedBudgetRange, setSelectedBudgetRange] = useState<string>('');
   const [selectedStatus, setSelectedStatus] = useState<string>('');
   const [selectedSizeRange, setSelectedSizeRange] = useState<string>('');
 
-  // Get unique values for filters
   const uniqueTypes = [...new Set(demoProjects.map(p => p.type))];
   const uniqueLocations = [...new Set(demoProjects.map(p => p.location))];
 
-  // Filter and sort projects
   const filteredProjects = useMemo(() => {
     let filtered = [...demoProjects];
 
-    // Search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(p => 
@@ -66,17 +62,14 @@ export default function Projects() {
       );
     }
 
-    // Type filter
     if (selectedTypes.length > 0) {
       filtered = filtered.filter(p => selectedTypes.includes(p.type));
     }
 
-    // Location filter
     if (selectedLocations.length > 0) {
       filtered = filtered.filter(p => selectedLocations.includes(p.location));
     }
 
-    // Budget filter
     if (selectedBudgetRange) {
       const [min, max] = selectedBudgetRange.split('-').map(Number);
       filtered = filtered.filter(p => {
@@ -87,7 +80,6 @@ export default function Projects() {
       });
     }
 
-    // Status filter
     if (selectedStatus) {
       if (selectedStatus === 'closing') {
         filtered = filtered.filter(p => p.daysRemaining <= 7);
@@ -98,7 +90,6 @@ export default function Projects() {
       }
     }
 
-    // Size filter
     if (selectedSizeRange) {
       const [min, max] = selectedSizeRange.split('-').map(Number);
       filtered = filtered.filter(p => {
@@ -109,7 +100,6 @@ export default function Projects() {
       });
     }
 
-    // Sort
     switch (sortBy) {
       case 'newest':
         filtered.sort((a, b) => new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime());
@@ -144,32 +134,32 @@ export default function Projects() {
   return (
     <div className="min-h-screen bg-bg">
       {/* Hero */}
-      <section className="bg-white border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-          <div className="max-w-3xl">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-3xl sm:text-4xl font-bold text-navy tracking-tight"
-            >
+      <section className="bg-navy text-white py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-3xl"
+          >
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
               Active Construction Projects
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="mt-3 text-text-muted text-lg"
-            >
+            </h1>
+            <p className="mt-4 text-lg text-white/80">
               Verified project opportunities from clients looking for the right professionals.
-            </motion.p>
-          </div>
+            </p>
+          </motion.div>
+        </div>
+      </section>
 
-          {/* Search and Filter Bar */}
-          <motion.div 
+      {/* Search and Filter Bar */}
+      <section className="bg-white border-b border-border sticky top-16 z-40 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mt-8 flex flex-col sm:flex-row gap-3"
+            className="flex flex-col sm:flex-row gap-3"
           >
             {/* Search */}
             <div className="flex-1 relative">
@@ -192,29 +182,31 @@ export default function Projects() {
             </div>
 
             {/* Filter Button */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => setShowFilters(!showFilters)}
               className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
                 showFilters || hasActiveFilters
                   ? 'bg-orange text-white'
-                  : 'bg-white border border-border text-text hover:border-navy'
+                  : 'bg-bg border border-border text-text hover:border-navy'
               }`}
             >
-              <SlidersHorizontal size={18} />
+              <Filter size={18} />
               <span>Filters</span>
               {hasActiveFilters && (
                 <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">
                   {selectedTypes.length + selectedLocations.length + (selectedBudgetRange ? 1 : 0) + (selectedStatus ? 1 : 0) + (selectedSizeRange ? 1 : 0)}
                 </span>
               )}
-            </button>
+            </motion.button>
 
             {/* Sort Dropdown */}
             <div className="relative">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="appearance-none w-full sm:w-48 px-4 py-3 pr-10 bg-white border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange cursor-pointer"
+                className="appearance-none w-full sm:w-48 px-4 py-3 pr-10 bg-bg border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange cursor-pointer"
               >
                 <option value="newest">Newest First</option>
                 <option value="closing">Closing Soon</option>
@@ -400,30 +392,6 @@ export default function Projects() {
                   </button>
                 </span>
               ))}
-              {selectedBudgetRange && (
-                <span className="flex items-center gap-1 px-3 py-1 bg-blue/10 text-blue text-xs font-semibold rounded-full">
-                  Budget
-                  <button onClick={() => setSelectedBudgetRange('')}>
-                    <X size={12} />
-                  </button>
-                </span>
-              )}
-              {selectedStatus && (
-                <span className="flex items-center gap-1 px-3 py-1 bg-green/10 text-green text-xs font-semibold rounded-full">
-                  Status
-                  <button onClick={() => setSelectedStatus('')}>
-                    <X size={12} />
-                  </button>
-                </span>
-              )}
-              {selectedSizeRange && (
-                <span className="flex items-center gap-1 px-3 py-1 bg-purple/10 text-purple text-xs font-semibold rounded-full">
-                  Size
-                  <button onClick={() => setSelectedSizeRange('')}>
-                    <X size={12} />
-                  </button>
-                </span>
-              )}
               <button
                 onClick={clearAllFilters}
                 className="text-xs font-semibold text-text-muted hover:text-orange transition-colors ml-2"

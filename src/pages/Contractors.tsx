@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { MapPin, ArrowRight, Shield, Building2, HardHat, Search, X, Briefcase, Award, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, ArrowRight, Shield, Building2, HardHat, Search, X, Briefcase, Award, CheckCircle } from 'lucide-react';
 
 interface Contractor {
   id: string;
@@ -37,8 +37,6 @@ const categories = [
   { name: 'Structural', icon: Building2 },
 ];
 
-const popularLocations = ['Lucknow', 'Kanpur', 'Noida', 'Delhi', 'Jaipur'];
-
 export default function Contractors() {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,15 +45,12 @@ export default function Contractors() {
   const [selectedExperience, setSelectedExperience] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
-  // Get unique values
   const uniqueSpecializations = [...new Set(demoContractors.map(c => c.specialization))];
   const uniqueLocations = [...new Set(demoContractors.map(c => c.location))];
 
-  // Filter contractors
   const filteredContractors = useMemo(() => {
     let filtered = [...demoContractors];
 
-    // Search
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(c =>
@@ -65,17 +60,14 @@ export default function Contractors() {
       );
     }
 
-    // Location
     if (selectedLocation) {
       filtered = filtered.filter(c => c.location === selectedLocation);
     }
 
-    // Specialization
     if (selectedSpecialization) {
       filtered = filtered.filter(c => c.specialization === selectedSpecialization);
     }
 
-    // Experience
     if (selectedExperience) {
       const [min, max] = selectedExperience.split('-').map(Number);
       filtered = filtered.filter(c => {
@@ -101,32 +93,37 @@ export default function Contractors() {
   return (
     <div className="min-h-screen bg-bg">
       {/* Hero */}
-      <section className="bg-white border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+      <section className="bg-navy text-white py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
             className="max-w-3xl"
           >
-            <h1 className="text-3xl sm:text-4xl font-bold text-navy tracking-tight">
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
               Find Trusted Construction Professionals
             </h1>
-            <p className="mt-3 text-text-muted text-lg">
+            <p className="mt-4 text-lg text-white/80">
               Discover verified contractors and construction professionals based on location, specialization and project experience.
             </p>
-            <div className="mt-6 flex flex-col sm:flex-row gap-4">
-              <Link
-                to="/projects/new"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20"
-              >
-                Post a Project <ArrowRight size={18} />
-              </Link>
-              <Link
-                to="/get-started?role=contractor"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-base font-semibold text-navy border-2 border-navy hover:bg-navy hover:text-white rounded-xl transition-all"
-              >
-                Join as Contractor
-              </Link>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  to="/projects/new"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20"
+                >
+                  Post a Project <ArrowRight size={18} />
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link
+                  to="/get-started?role=contractor"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-white border-2 border-white/30 hover:border-white hover:bg-white/10 rounded-xl transition-all"
+                >
+                  Join as Contractor
+                </Link>
+              </motion.div>
             </div>
           </motion.div>
 
@@ -135,23 +132,23 @@ export default function Contractors() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mt-8 bg-bg rounded-2xl border border-border p-6"
+            className="mt-8 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 p-6"
           >
             <div className="flex flex-col lg:flex-row gap-4">
               {/* Search Input */}
               <div className="flex-1 relative">
-                <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" />
+                <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60" />
                 <input
                   type="text"
                   placeholder="Search contractors by name, trade or specialization..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange transition-all"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-text"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white"
                   >
                     <X size={16} />
                   </button>
@@ -162,11 +159,11 @@ export default function Contractors() {
               <select
                 value={selectedLocation}
                 onChange={(e) => setSelectedLocation(e.target.value)}
-                className="px-4 py-3 bg-white border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange cursor-pointer"
+                className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange cursor-pointer"
               >
-                <option value="">All Locations</option>
+                <option value="" className="bg-navy">All Locations</option>
                 {uniqueLocations.map(loc => (
-                  <option key={loc} value={loc}>{loc}</option>
+                  <option key={loc} value={loc} className="bg-navy">{loc}</option>
                 ))}
               </select>
 
@@ -174,25 +171,27 @@ export default function Contractors() {
               <select
                 value={selectedSpecialization}
                 onChange={(e) => setSelectedSpecialization(e.target.value)}
-                className="px-4 py-3 bg-white border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange cursor-pointer"
+                className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange cursor-pointer"
               >
-                <option value="">All Specializations</option>
+                <option value="" className="bg-navy">All Specializations</option>
                 {uniqueSpecializations.map(spec => (
-                  <option key={spec} value={spec}>{spec}</option>
+                  <option key={spec} value={spec} className="bg-navy">{spec}</option>
                 ))}
               </select>
 
               {/* Filter Toggle */}
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setShowFilters(!showFilters)}
                 className={`px-6 py-3 rounded-xl font-semibold transition-all ${
                   showFilters || hasActiveFilters
                     ? 'bg-orange text-white'
-                    : 'bg-white border border-border text-text hover:border-navy'
+                    : 'bg-white/10 border border-white/20 text-white hover:bg-white/20'
                 }`}
               >
                 More Filters
-              </button>
+              </motion.button>
             </div>
 
             {/* Advanced Filters */}
@@ -203,22 +202,22 @@ export default function Contractors() {
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="mt-4 pt-4 border-t border-border"
+                  className="mt-4 pt-4 border-t border-white/20"
                 >
                   <div className="grid sm:grid-cols-2 gap-4">
                     {/* Experience Filter */}
                     <div>
-                      <label className="block text-sm font-semibold text-navy mb-2">Experience</label>
+                      <label className="block text-sm font-semibold text-white mb-2">Experience</label>
                       <select
                         value={selectedExperience}
                         onChange={(e) => setSelectedExperience(e.target.value)}
-                        className="w-full px-4 py-3 bg-white border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange cursor-pointer"
+                        className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-orange/50 focus:border-orange cursor-pointer"
                       >
-                        <option value="">Any Experience</option>
-                        <option value="0-5">0-5 years</option>
-                        <option value="5-10">5-10 years</option>
-                        <option value="10-15">10-15 years</option>
-                        <option value="15-">15+ years</option>
+                        <option value="" className="bg-navy">Any Experience</option>
+                        <option value="0-5" className="bg-navy">0-5 years</option>
+                        <option value="5-10" className="bg-navy">5-10 years</option>
+                        <option value="10-15" className="bg-navy">10-15 years</option>
+                        <option value="15-" className="bg-navy">15+ years</option>
                       </select>
                     </div>
                   </div>
@@ -226,7 +225,7 @@ export default function Contractors() {
                   {hasActiveFilters && (
                     <button
                       onClick={clearAllFilters}
-                      className="mt-4 text-sm font-semibold text-text-muted hover:text-orange transition-colors"
+                      className="mt-4 text-sm font-semibold text-white/80 hover:text-orange transition-colors"
                     >
                       Clear All Filters
                     </button>
@@ -380,7 +379,7 @@ export default function Contractors() {
           >
             <h2 className="text-xl font-bold text-navy mb-4">Find contractors near your project</h2>
             <div className="flex flex-wrap gap-3">
-              {popularLocations.map((location, i) => (
+              {['Lucknow', 'Kanpur', 'Noida', 'Delhi', 'Jaipur'].map((location, i) => (
                 <motion.button
                   key={location}
                   initial={{ opacity: 0, scale: 0.9 }}

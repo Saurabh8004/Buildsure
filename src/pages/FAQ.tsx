@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
 const faqs = [
@@ -22,12 +23,17 @@ export default function FAQ() {
 
   return (
     <div>
-      <section className="bg-bg py-16 lg:py-20 border-b border-border">
+      <section className="bg-navy text-white py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <h1 className="text-3xl sm:text-4xl font-bold text-navy tracking-tight">Frequently Asked Questions</h1>
-            <p className="mt-4 text-lg text-text-muted">Everything you need to know about ConstructBid.</p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-3xl"
+          >
+            <h1 className="text-4xl font-bold tracking-tight">Frequently Asked Questions</h1>
+            <p className="mt-4 text-lg text-white/80">Everything you need to know about ConstructBid.</p>
+          </motion.div>
         </div>
       </section>
 
@@ -35,21 +41,43 @@ export default function FAQ() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-3">
             {faqs.map((faq, i) => (
-              <div key={i} className="border border-border rounded-xl overflow-hidden">
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                className="border border-border rounded-xl overflow-hidden"
+              >
                 <button
                   onClick={() => setOpenIndex(openIndex === i ? null : i)}
                   className="w-full flex items-center justify-between p-5 text-left hover:bg-bg transition-colors"
                   aria-expanded={openIndex === i}
                 >
                   <span className="text-sm font-semibold text-navy pr-4">{faq.q}</span>
-                  <ChevronDown size={18} className={`text-text-muted shrink-0 transition-transform ${openIndex === i ? 'rotate-180' : ''}`} />
+                  <motion.div
+                    animate={{ rotate: openIndex === i ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ChevronDown size={18} className="text-text-muted shrink-0" />
+                  </motion.div>
                 </button>
-                {openIndex === i && (
-                  <div className="px-5 pb-5">
-                    <p className="text-sm text-text-muted leading-relaxed">{faq.a}</p>
-                  </div>
-                )}
-              </div>
+                <AnimatePresence>
+                  {openIndex === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-5 pb-5">
+                        <p className="text-sm text-text-muted leading-relaxed">{faq.a}</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             ))}
           </div>
         </div>

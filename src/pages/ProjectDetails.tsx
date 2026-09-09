@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { projectService, tenderService, bidService } from '../lib/services';
-import { ArrowLeft, MapPin, Calendar, DollarSign, FileText, Users, CheckCircle, Clock } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, FileText, Users, CheckCircle, Clock } from 'lucide-react';
 
 export default function ProjectDetails() {
   const { id } = useParams<{ id: string }>();
@@ -27,11 +28,9 @@ export default function ProjectDetails() {
       const projectData = await projectService.getProject(id);
       setProject(projectData);
 
-      // Load tenders for this project
       const tenderData = await tenderService.getProjectTenders(id);
       setTenders(tenderData);
 
-      // Load bids for all tenders
       const allBids = [];
       for (const tender of tenderData) {
         const tenderBids = await bidService.getTenderBids(tender.id);
@@ -94,7 +93,11 @@ export default function ProjectDetails() {
             <ArrowLeft size={16} /> Back
           </button>
           
-          <div className="flex items-start justify-between">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-start justify-between"
+          >
             <div>
               <h1 className="text-3xl font-bold text-navy">{project.title}</h1>
               <div className="flex items-center gap-4 mt-2 text-sm text-text-muted">
@@ -106,12 +109,17 @@ export default function ProjectDetails() {
                 </span>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Project Overview */}
         <div className="grid lg:grid-cols-3 gap-6 mb-8">
-          <div className="lg:col-span-2 bg-white rounded-2xl border border-border p-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="lg:col-span-2 bg-white rounded-2xl border border-border p-6"
+          >
             <h2 className="text-xl font-bold text-navy mb-4">Project Overview</h2>
             <div className="grid sm:grid-cols-2 gap-4">
               {project.area_sqft && (
@@ -147,10 +155,15 @@ export default function ProjectDetails() {
                 <p className="text-text">{project.description}</p>
               </div>
             )}
-          </div>
+          </motion.div>
 
           {/* Quick Stats */}
-          <div className="space-y-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="space-y-4"
+          >
             <div className="bg-white rounded-2xl border border-border p-6">
               <div className="flex items-center gap-3 mb-2">
                 <FileText size={20} className="text-blue" />
@@ -165,12 +178,17 @@ export default function ProjectDetails() {
               </div>
               <p className="text-3xl font-bold text-navy">{bids.length}</p>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Tenders */}
         {tenders.length > 0 && (
-          <div className="bg-white rounded-2xl border border-border p-6 mb-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white rounded-2xl border border-border p-6 mb-8"
+          >
             <h2 className="text-xl font-bold text-navy mb-4">Tenders</h2>
             <div className="space-y-3">
               {tenders.map((tender) => (
@@ -196,12 +214,17 @@ export default function ProjectDetails() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Bids */}
         {bids.length > 0 && (
-          <div className="bg-white rounded-2xl border border-border p-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="bg-white rounded-2xl border border-border p-6"
+          >
             <h2 className="text-xl font-bold text-navy mb-4">Bids ({bids.length})</h2>
             <div className="space-y-3">
               {bids.map((bid) => (
@@ -236,16 +259,21 @@ export default function ProjectDetails() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
 
         {/* Empty States */}
         {tenders.length === 0 && (
-          <div className="bg-white rounded-2xl border border-border p-12 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="bg-white rounded-2xl border border-border p-12 text-center"
+          >
             <FileText size={48} className="text-text-muted mx-auto mb-4" />
             <h3 className="text-lg font-bold text-navy mb-2">No Tenders Yet</h3>
             <p className="text-text-muted">Create a tender to start receiving bids from contractors.</p>
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

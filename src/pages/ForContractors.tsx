@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle, MapPin, Building2, BarChart3, Eye, FileText, Award, Briefcase, Banknote } from 'lucide-react';
 
 export default function ForContractors() {
@@ -16,56 +17,81 @@ export default function ForContractors() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-bg py-16 lg:py-24 border-b border-border">
+      <section className="bg-navy text-white py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-navy tracking-tight">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-3xl"
+          >
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
               Find Better Construction Opportunities.
             </h1>
-            <p className="mt-4 text-lg text-text-muted leading-relaxed">
+            <p className="mt-4 text-lg text-white/80 leading-relaxed">
               Spend less time searching and more time building. Access verified project opportunities, submit competitive bids and grow your construction business.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Link to="/get-started" className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
-                Join as a Contractor <ArrowRight size={18} />
-              </Link>
-              <Link to="/financing" className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold text-navy border-2 border-navy hover:bg-navy hover:text-white rounded-xl transition-all">
-                Explore Financing
-              </Link>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link to="/get-started" className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
+                  Join as a Contractor <ArrowRight size={18} />
+                </Link>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link to="/financing" className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-white border-2 border-white/30 hover:border-white hover:bg-white/10 rounded-xl transition-all">
+                  Explore Financing
+                </Link>
+              </motion.div>
             </div>
-            <p className="mt-3 text-sm text-text-muted">Only verified/eligible contractors can bid on the platform.</p>
-          </div>
+            <p className="mt-3 text-sm text-white/60">Only verified/eligible contractors can bid on the platform.</p>
+          </motion.div>
         </div>
       </section>
 
       {/* Features */}
       <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-navy mb-10">What You Get</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, i) => (
-              <div key={i} className="p-6 bg-bg rounded-2xl border border-border card-shadow hover:card-shadow-hover transition-all">
-                <div className="w-11 h-11 bg-teal/10 rounded-xl flex items-center justify-center mb-4">
-                  <feature.icon size={20} className="text-teal" />
-                </div>
-                <h3 className="text-base font-bold text-navy">{feature.title}</h3>
-                <p className="mt-2 text-sm text-text-muted leading-relaxed">{feature.desc}</p>
-              </div>
-            ))}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-bold text-navy mb-10">What You Get</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {features.map((feature, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -8 }}
+                  className="p-6 bg-bg rounded-2xl border border-border card-shadow hover:card-shadow-hover transition-all"
+                >
+                  <div className="w-11 h-11 bg-teal/10 rounded-xl flex items-center justify-center mb-4">
+                    <feature.icon size={20} className="text-teal" />
+                  </div>
+                  <h3 className="text-base font-bold text-navy">{feature.title}</h3>
+                  <p className="mt-2 text-sm text-text-muted leading-relaxed">{feature.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Demo Opportunity */}
-      <section className="py-16 lg:py-24 bg-bg border-y border-border">
+      <section className="py-16 lg:py-24 bg-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">
-                See What Opportunities Look Like
-              </h2>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl font-bold text-navy tracking-tight">See What Opportunities Look Like</h2>
               <p className="mt-4 text-text-muted leading-relaxed">
-                Projects on BuildSure come with structured requirements — clear scope, budget range, timeline and location. You can quickly assess if a project matches your capabilities and service area.
+                Projects on ConstructBid come with structured requirements — clear scope, budget range, timeline and location. You can quickly assess if a project matches your capabilities and service area.
               </p>
               <div className="mt-6 space-y-3">
                 {[
@@ -81,8 +107,13 @@ export default function ForContractors() {
                   </div>
                 ))}
               </div>
-            </div>
-            <div className="bg-white rounded-2xl p-6 border border-border card-shadow">
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="bg-white rounded-2xl p-6 border border-border card-shadow"
+            >
               <div className="flex items-center justify-between mb-4">
                 <span className="text-xs font-semibold text-teal bg-teal/10 px-2 py-1 rounded">DEMO OPPORTUNITY</span>
                 <span className="text-xs text-text-muted">New</span>
@@ -111,12 +142,12 @@ export default function ForContractors() {
               </div>
               <div className="mt-4 flex items-center gap-2 p-3 bg-green/5 rounded-lg border border-green/20">
                 <CheckCircle size={14} className="text-green" />
-                <span className="text-xs text-green font-medium">Matches your service area</span>
+                <span className="text-xs text-green font-medium">Eligible to Bid</span>
               </div>
               <button className="mt-4 w-full py-2.5 text-sm font-semibold text-orange border border-orange rounded-lg hover:bg-orange hover:text-white transition-colors">
                 View Opportunity
               </button>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -124,7 +155,12 @@ export default function ForContractors() {
       {/* Financing */}
       <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-navy rounded-3xl p-10 lg:p-14 text-center relative overflow-hidden">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-navy rounded-3xl p-10 lg:p-14 text-center relative overflow-hidden"
+          >
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-0 right-0 w-64 h-64 bg-orange rounded-full blur-3xl"></div>
             </div>
@@ -133,7 +169,7 @@ export default function ForContractors() {
                 Need Funds to Execute More Projects?
               </h2>
               <p className="mt-4 text-white/70 max-w-2xl mx-auto">
-                Material purchases, manpower and equipment can put pressure on working capital. BuildSure can help connect eligible contractors with financing partners.
+                Material purchases, manpower and equipment can put pressure on working capital. ConstructBid can help connect eligible contractors with financing partners.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
                 {['Working Capital', 'Material Finance', 'Equipment Finance', 'Project Finance'].map((item, i) => (
@@ -143,26 +179,36 @@ export default function ForContractors() {
                 ))}
               </div>
               <div className="mt-8">
-                <Link to="/financing" className="inline-flex items-center gap-2 px-7 py-4 text-sm font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/30">
-                  Explore Financing <ArrowRight size={16} />
-                </Link>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                  <Link to="/financing" className="inline-flex items-center gap-2 px-8 py-4 text-sm font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/30">
+                    Explore Financing <ArrowRight size={16} />
+                  </Link>
+                </motion.div>
               </div>
-              <p className="mt-4 text-xs text-white/50">Financing is subject to eligibility, partner policies and underwriting. BuildSure does not guarantee approval.</p>
+              <p className="mt-4 text-xs text-white/50">Financing is subject to eligibility, partner policies and underwriting. ConstructBid does not guarantee approval.</p>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-16 bg-bg border-t border-border">
+      <section className="py-16 bg-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-navy">Ready to Find Better Projects?</h2>
-          <p className="mt-3 text-text-muted">Join BuildSure as a contractor and start receiving project opportunities.</p>
-          <div className="mt-8">
-            <Link to="/get-started" className="inline-flex items-center gap-2 px-7 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
-              Join as a Contractor <ArrowRight size={18} />
-            </Link>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-bold text-navy">Ready to Find Better Projects?</h2>
+            <p className="mt-3 text-text-muted">Join ConstructBid as a contractor and start receiving project opportunities.</p>
+            <div className="mt-8">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link to="/get-started" className="inline-flex items-center gap-2 px-8 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
+                  Join as a Contractor <ArrowRight size={18} />
+                </Link>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>

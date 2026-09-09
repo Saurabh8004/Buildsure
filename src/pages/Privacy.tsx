@@ -1,10 +1,10 @@
 export default function Privacy() {
   return (
     <div>
-      <section className="bg-bg py-16 lg:py-20 border-b border-border">
+      <section className="bg-navy text-white py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-navy tracking-tight">Privacy Policy</h1>
-          <p className="mt-2 text-sm text-text-muted">Last updated: January 2025</p>
+          <h1 className="text-4xl font-bold tracking-tight">Privacy Policy</h1>
+          <p className="mt-2 text-sm text-white/60">Last updated: January 2025</p>
         </div>
       </section>
 
@@ -13,7 +13,7 @@ export default function Privacy() {
           <div className="space-y-8 text-text text-sm leading-relaxed">
             <div>
               <h2 className="text-lg font-bold text-navy mb-3">1. Introduction</h2>
-              <p>BuildSure ("we", "us", "our") respects your privacy and is committed to protecting your personal data. This privacy policy explains how we collect, use and safeguard your information when you use our platform.</p>
+              <p>ConstructBid ("we", "us", "our") respects your privacy and is committed to protecting your personal data. This privacy policy explains how we collect, use and safeguard your information when you use our platform.</p>
             </div>
 
             <div>
@@ -31,7 +31,7 @@ export default function Privacy() {
               <h2 className="text-lg font-bold text-navy mb-3">3. How We Use Your Information</h2>
               <p>We use your information to:</p>
               <ul className="list-disc pl-5 mt-2 space-y-1">
-                <li>Provide and maintain the BuildSure platform</li>
+                <li>Provide and maintain the ConstructBid platform</li>
                 <li>Verify professional profiles and eligibility</li>
                 <li>Facilitate connections between clients and contractors</li>
                 <li>Support project monitoring and quality assurance</li>

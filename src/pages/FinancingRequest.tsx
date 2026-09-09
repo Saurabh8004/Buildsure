@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, CheckCircle, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -48,12 +48,10 @@ export default function FinancingRequest() {
     setLoading(true);
 
     try {
-      // Verify user is authenticated
       if (!user) {
         throw new Error('You must be logged in to submit a financing request');
       }
 
-      // Create financing request in database
       const { data, error } = await supabase
         .from('financing_requests')
         .insert({
@@ -190,7 +188,7 @@ export default function FinancingRequest() {
           animate={{ opacity: 1 }}
           className="bg-white rounded-2xl border border-border p-6 sm:p-8"
         >
-          <AnimatePresence mode="wait">
+          <div className="space-y-6">
             {/* Step 1: Financing Purpose */}
             {step === 1 && (
               <motion.div
@@ -474,7 +472,7 @@ export default function FinancingRequest() {
                 </label>
               </motion.div>
             )}
-          </AnimatePresence>
+          </div>
 
           {/* Navigation Buttons */}
           <div className="mt-8 flex items-center justify-between">

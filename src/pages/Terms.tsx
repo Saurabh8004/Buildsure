@@ -1,10 +1,10 @@
 export default function Terms() {
   return (
     <div>
-      <section className="bg-bg py-16 lg:py-20 border-b border-border">
+      <section className="bg-navy text-white py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-navy tracking-tight">Terms of Service</h1>
-          <p className="mt-2 text-sm text-text-muted">Last updated: January 2025</p>
+          <h1 className="text-4xl font-bold tracking-tight">Terms of Service</h1>
+          <p className="mt-2 text-sm text-white/60">Last updated: January 2025</p>
         </div>
       </section>
 
