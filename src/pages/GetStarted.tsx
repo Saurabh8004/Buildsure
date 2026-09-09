@@ -4,8 +4,8 @@ import { ArrowRight, Users, HardHat, Ruler, Eye } from 'lucide-react';
 const roles = [
   {
     id: 'client',
-    title: 'Client',
-    desc: 'I want to post a construction project and find contractors.',
+    title: 'Client / Property Owner',
+    desc: 'Post projects, receive bids and manage your build.',
     icon: Users,
     color: 'bg-orange/5 border-orange/20',
     iconColor: 'text-orange',
@@ -14,16 +14,16 @@ const roles = [
   {
     id: 'contractor',
     title: 'Contractor',
-    desc: 'I want to find projects and submit competitive bids.',
+    desc: 'Find relevant projects and submit competitive bids.',
     icon: HardHat,
     color: 'bg-navy/5 border-navy/10',
     iconColor: 'text-navy',
     cta: 'Find Opportunities',
   },
   {
-    id: 'professional',
+    id: 'architect',
     title: 'Architect / Engineer',
-    desc: 'I want to offer professional construction services.',
+    desc: 'Offer design, planning and technical expertise.',
     icon: Ruler,
     color: 'bg-blue/5 border-blue/10',
     iconColor: 'text-blue',
@@ -32,7 +32,7 @@ const roles = [
   {
     id: 'inspector',
     title: 'Quality Inspector',
-    desc: 'I want to inspect and monitor construction quality.',
+    desc: 'Inspect projects and monitor construction quality.',
     icon: Eye,
     color: 'bg-teal/5 border-teal/10',
     iconColor: 'text-teal',
@@ -63,9 +63,9 @@ export default function GetStarted() {
                   <path d="M9 21v-6h6v6" />
                 </svg>
               </div>
-              <span className="text-2xl font-bold text-navy tracking-tight">Build<span className="text-teal">Sure</span></span>
+              <span className="text-2xl font-bold text-navy tracking-tight">Construct<span className="text-orange">Bid</span></span>
             </Link>
-            <h1 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">How will you use BuildSure?</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">How will you use ConstructBid?</h1>
             <p className="mt-2 text-text-muted">Select your role to get started.</p>
           </div>
 

@@ -86,7 +86,7 @@ export default function Home() {
                 transition={{ delay: 0.2 }}
                 className="mt-3 text-white/70 max-w-2xl mx-auto"
               >
-                BuildSure can help connect eligible users with financing partners.
+                ConstructBid can help connect eligible users with financing partners.
               </motion.p>
             </div>
 
@@ -108,14 +108,14 @@ export default function Home() {
         </section>
       </AnimatedSection>
 
-      {/* Why BuildSure */}
+      {/* Why ConstructBid */}
       <AnimatedSection>
         <section className="py-16 lg:py-24 bg-bg">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">Why BuildSure</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">Why ConstructBid</h2>
               <p className="mt-3 text-text-muted max-w-2xl mx-auto">
-                BuildSure gives clients more visibility before and during construction.
+                ConstructBid gives clients more visibility before and during construction.
               </p>
             </div>
 

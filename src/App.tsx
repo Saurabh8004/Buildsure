@@ -8,6 +8,8 @@ import ForContractors from './pages/ForContractors';
 import ArchitectPartnership from './pages/ArchitectPartnership';
 import QualityAssurance from './pages/QualityAssurance';
 import Finance from './pages/Finance';
+import FinancingRequest from './pages/FinancingRequest';
+import InspectionRequest from './pages/InspectionRequest';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
@@ -43,6 +45,8 @@ export default function App() {
           <Route path="/quality-assurance" element={<QualityAssurance />} />
           <Route path="/finance" element={<Finance />} />
           <Route path="/financing" element={<Finance />} />
+          <Route path="/financing/request" element={<FinancingRequest />} />
+          <Route path="/quality-assurance/request" element={<InspectionRequest />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />

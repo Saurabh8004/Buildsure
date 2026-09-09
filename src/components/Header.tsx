@@ -27,7 +27,7 @@ export default function Header() {
                 <path d="M9 21v-6h6v6" />
               </svg>
             </div>
-            <span className="text-xl font-bold text-navy tracking-tight">Build<span className="text-teal">Sure</span></span>
+            <span className="text-xl font-bold text-navy tracking-tight">Construct<span className="text-orange">Bid</span></span>
           </Link>
 
           {/* Desktop Nav */}

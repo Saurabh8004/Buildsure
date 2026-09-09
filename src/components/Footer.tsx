@@ -15,7 +15,7 @@ export default function Footer() {
                   <path d="M9 21v-6h6v6" />
                 </svg>
               </div>
-              <span className="text-xl font-bold tracking-tight">Build<span className="text-teal-light">Sure</span></span>
+              <span className="text-xl font-bold tracking-tight">Construct<span className="text-orange">Bid</span></span>
             </Link>
             <p className="text-white/70 text-sm leading-relaxed max-w-sm mb-4">
               Build Better. Connect Smarter. Connecting property owners with construction professionals through structured procurement, competitive bidding and quality assurance.
@@ -59,7 +59,7 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-white/50 text-sm">© {new Date().getFullYear()} BuildSure. All rights reserved.</p>
+          <p className="text-white/50 text-sm">© {new Date().getFullYear()} ConstructBid. All rights reserved.</p>
           <p className="text-white/70 text-sm font-medium">BUILD BETTER. CONNECT SMARTER.</p>
         </div>
       </div>

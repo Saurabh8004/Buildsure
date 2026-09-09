@@ -95,7 +95,7 @@ export default function Finance() {
           <h2 className="text-2xl sm:text-3xl font-bold text-navy">Explore Financing Options</h2>
           <p className="mt-3 text-text-muted">Tell us about your project and we'll help connect you with the right financing partner.</p>
           <div className="mt-8">
-            <Link to="/get-started" className="inline-flex items-center gap-2 px-7 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
+            <Link to="/financing/request" className="inline-flex items-center gap-2 px-7 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
               Get Started <ArrowRight size={18} />
             </Link>
           </div>

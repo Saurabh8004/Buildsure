@@ -108,13 +108,13 @@ export default function SignIn() {
                   <path d="M9 21v-6h6v6" />
                 </svg>
               </div>
-              <span className="text-2xl font-bold text-navy tracking-tight">Build<span className="text-orange">Sure</span></span>
+              <span className="text-2xl font-bold text-navy tracking-tight">Construct<span className="text-orange">Bid</span></span>
             </Link>
             <h1 className="text-2xl font-bold text-navy tracking-tight">
               {isSignUp ? 'Create Your Account' : 'Welcome Back'}
             </h1>
             <p className="mt-2 text-text-muted text-sm">
-              {isSignUp ? 'Join BuildSure to get started.' : 'Sign in to your BuildSure account.'}
+              {isSignUp ? 'Join ConstructBid to get started.' : 'Sign in to your ConstructBid account.'}
             </p>
           </div>
 

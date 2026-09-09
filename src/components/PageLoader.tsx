@@ -58,7 +58,7 @@ export default function PageLoader() {
           className="mt-32 text-center"
         >
           <h1 className="text-2xl font-bold text-white tracking-tight">
-            Build<span className="text-orange">Sure</span>
+            Construct<span className="text-orange">Bid</span>
           </h1>
           <motion.p
             initial={{ opacity: 0 }}

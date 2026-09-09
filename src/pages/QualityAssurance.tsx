@@ -30,9 +30,12 @@ export default function QualityAssurance() {
             <p className="mt-4 text-lg text-text-muted leading-relaxed">
               BuildSure supports independent project monitoring and inspections at key construction stages. Problems are easier to fix when they are found early.
             </p>
-            <div className="mt-8">
-              <Link to="/get-started" className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
-                Explore Quality Assurance <ArrowRight size={18} />
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <Link to="/quality-assurance/request" className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold text-white bg-teal hover:bg-teal-dark rounded-xl transition-all shadow-lg shadow-teal/20">
+                Request Inspection <ArrowRight size={18} />
+              </Link>
+              <Link to="/get-started" className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold text-navy border-2 border-navy hover:bg-navy hover:text-white rounded-xl transition-all">
+                Learn More <ArrowRight size={18} />
               </Link>
             </div>
           </div>
