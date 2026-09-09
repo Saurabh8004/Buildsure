@@ -48,29 +48,46 @@ export default function FinancingRequest() {
     setLoading(true);
 
     try {
+      // Verify user is authenticated
+      if (!user) {
+        throw new Error('You must be logged in to submit a financing request');
+      }
+
       // Create financing request in database
-      const { error } = await supabase.from('financing_requests').insert({
-        user_id: user?.id || null,
-        financing_purpose: formData.financingPurpose,
-        applicant_type: formData.applicantType,
-        project_location: formData.projectLocation,
-        estimated_cost: parseFloat(formData.estimatedCost) || null,
-        financing_amount: parseFloat(formData.financingAmount) || null,
-        expected_start_date: formData.expectedStartDate || null,
-        project_description: formData.projectDescription,
-        full_name: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        preferred_contact: formData.preferredContact,
-        status: 'new',
-      });
+      const { data, error } = await supabase
+        .from('financing_requests')
+        .insert({
+          user_id: user.id,
+          financing_purpose: formData.financingPurpose,
+          applicant_type: formData.applicantType,
+          project_location: formData.projectLocation,
+          estimated_cost: formData.estimatedCost ? parseFloat(formData.estimatedCost) : null,
+          financing_amount: parseFloat(formData.financingAmount),
+          expected_start_date: formData.expectedStartDate || null,
+          project_description: formData.projectDescription || null,
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          preferred_contact: formData.preferredContact,
+          status: 'new',
+        })
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw new Error(error.message || 'Failed to submit financing request');
+      }
 
+      if (!data) {
+        throw new Error('No data returned from database');
+      }
+
+      console.log('Financing request created:', data.id);
       setSubmitted(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to submit financing request:', error);
-      alert('Failed to submit request. Please try again.');
+      alert(error.message || 'Failed to submit request. Please try again.');
     } finally {
       setLoading(false);
     }

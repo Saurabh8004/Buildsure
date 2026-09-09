@@ -28,7 +28,7 @@ export default function QualityAssurance() {
               Don't Just Track Progress.<br />Check Quality.
             </h1>
             <p className="mt-4 text-lg text-text-muted leading-relaxed">
-              BuildSure supports independent project monitoring and inspections at key construction stages. Problems are easier to fix when they are found early.
+              ConstructBid supports independent project monitoring and inspections at key construction stages. Problems are easier to fix when they are found early.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Link to="/quality-assurance/request" className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold text-white bg-teal hover:bg-teal-dark rounded-xl transition-all shadow-lg shadow-teal/20">
@@ -80,7 +80,7 @@ export default function QualityAssurance() {
           <div className="max-w-2xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-bold text-navy mb-4 text-center">Quality Issue Workflow</h2>
             <p className="text-text-muted text-center mb-10">
-              BuildSure creates visibility around quality issues instead of letting them disappear into conversations.
+              ConstructBid creates visibility around quality issues instead of letting them disappear into conversations.
             </p>
             <div className="space-y-4">
               {[

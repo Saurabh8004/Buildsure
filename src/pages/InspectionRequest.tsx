@@ -33,26 +33,44 @@ export default function InspectionRequest() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.from('inspection_requests').insert({
-        user_id: user?.id || null,
-        project_name: formData.projectName,
-        project_location: formData.projectLocation,
-        inspection_type: formData.inspectionType,
-        preferred_date: formData.preferredDate || null,
-        project_stage: formData.projectStage,
-        special_requirements: formData.specialRequirements,
-        full_name: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        status: 'new',
-      });
+      // Verify user is authenticated
+      if (!user) {
+        throw new Error('You must be logged in to submit an inspection request');
+      }
 
-      if (error) throw error;
+      // Create inspection request in database
+      const { data, error } = await supabase
+        .from('inspection_requests')
+        .insert({
+          user_id: user.id,
+          project_name: formData.projectName,
+          project_location: formData.projectLocation,
+          inspection_type: formData.inspectionType,
+          preferred_date: formData.preferredDate || null,
+          project_stage: formData.projectStage,
+          special_requirements: formData.specialRequirements || null,
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          status: 'new',
+        })
+        .select()
+        .single();
 
+      if (error) {
+        console.error('Database error:', error);
+        throw new Error(error.message || 'Failed to submit inspection request');
+      }
+
+      if (!data) {
+        throw new Error('No data returned from database');
+      }
+
+      console.log('Inspection request created:', data.id);
       setSubmitted(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to submit inspection request:', error);
-      alert('Failed to submit request. Please try again.');
+      alert(error.message || 'Failed to submit request. Please try again.');
     } finally {
       setLoading(false);
     }

@@ -9,11 +9,11 @@ const demoProjects = [
 ];
 
 const faqs = [
-  { q: 'What is BuildSure?', a: 'BuildSure is a construction procurement platform connecting property owners with verified contractors, architects, engineers and quality inspectors.' },
-  { q: 'How does BuildSure work?', a: 'Clients post requirements. Eligible contractors submit competitive bids. Clients compare offers and choose their preferred contractor. Projects move into execution with quality monitoring.' },
-  { q: 'Is posting a project free?', a: 'Yes, clients can post construction requirements for free on BuildSure.' },
-  { q: 'Can I choose my contractor?', a: 'Yes. Clients always make the final contractor selection. BuildSure never selects a contractor for you.' },
-  { q: 'Does BuildSure monitor quality?', a: 'BuildSure supports independent project monitoring and inspections at key construction stages.' },
+  { q: 'What is ConstructBid?', a: 'ConstructBid is a construction procurement platform connecting property owners with verified contractors, architects, engineers and quality inspectors.' },
+  { q: 'How does ConstructBid work?', a: 'Clients post requirements. Eligible contractors submit competitive bids. Clients compare offers and choose their preferred contractor. Projects move into execution with quality monitoring.' },
+  { q: 'Is posting a project free?', a: 'Yes, clients can post construction requirements for free on ConstructBid.' },
+  { q: 'Can I choose my contractor?', a: 'Yes. Clients always make the final contractor selection. ConstructBid never selects a contractor for you.' },
+  { q: 'Does ConstructBid monitor quality?', a: 'ConstructBid supports independent project monitoring and inspections at key construction stages.' },
 ];
 
 export default function Home() {
@@ -192,7 +192,7 @@ export default function Home() {
               Need Funding for Your Project?
             </h2>
             <p className="mt-3 text-white/70 max-w-2xl mx-auto">
-              Construction and working capital can put pressure on your finances. BuildSure can help connect eligible users with financing partners and make the process lighter.
+              Construction and working capital can put pressure on your finances. ConstructBid can help connect eligible users with financing partners and make the process lighter.
             </p>
           </div>
 
@@ -238,7 +238,7 @@ export default function Home() {
             <Link to="/financing" className="inline-flex items-center gap-2 px-7 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/30">
               Explore Financing <ArrowRight size={18} />
             </Link>
-            <p className="mt-4 text-xs text-white/50">Financing is subject to eligibility, partner policies and underwriting. BuildSure does not guarantee approval.</p>
+            <p className="mt-4 text-xs text-white/50">Financing is subject to eligibility, partner policies and underwriting. ConstructBid does not guarantee approval.</p>
           </div>
         </div>
       </section>
@@ -247,7 +247,7 @@ export default function Home() {
       <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">How BuildSure Works</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">How ConstructBid Works</h2>
             <p className="mt-3 text-text-muted max-w-xl mx-auto">A structured process from project posting to quality-monitored completion.</p>
           </div>
 
@@ -263,7 +263,7 @@ export default function Home() {
               <div className="space-y-4">
                 {[
                   'Post your project',
-                  'BuildSure structures the requirement',
+                  'ConstructBid structures the requirement',
                   'Eligible contractors submit bids',
                   'Compare complete offers',
                   'Choose your contractor',
@@ -315,9 +315,9 @@ export default function Home() {
       <section className="py-16 lg:py-24 bg-bg border-y border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">Why BuildSure</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">Why ConstructBid</h2>
             <p className="mt-3 text-text-muted max-w-2xl mx-auto">
-              BuildSure gives clients more visibility before and during construction — while giving contractors better access to relevant project opportunities.
+              ConstructBid gives clients more visibility before and during construction — while giving contractors better access to relevant project opportunities.
             </p>
           </div>
 
@@ -351,7 +351,7 @@ export default function Home() {
                 Don't Just Track Progress.<br />Check Quality.
               </h2>
               <p className="mt-4 text-text-muted leading-relaxed">
-                BuildSure supports independent project monitoring and inspections at key construction stages. Problems are easier to fix when they are found early.
+                ConstructBid supports independent project monitoring and inspections at key construction stages. Problems are easier to fix when they are found early.
               </p>
               <div className="mt-6 grid grid-cols-2 gap-3">
                 {['Site Inspections', 'Material Verification', 'Milestone Tracking', 'Progress Photos', 'Quality Issues', 'Final Handover'].map((item, i) => (
@@ -395,7 +395,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">Design. Plan. Tender. Build.</h2>
           <p className="mt-3 text-text-muted max-w-xl mx-auto">
-            Join the BuildSure professional network and contribute your expertise across the construction lifecycle.
+            Join the ConstructBid professional network and contribute your expertise across the construction lifecycle.
           </p>
           <div className="mt-8">
             <Link to="/architect-partnership" className="inline-flex items-center gap-2 px-7 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
@@ -409,7 +409,7 @@ export default function Home() {
       <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">Who BuildSure Is For</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-navy tracking-tight">Who ConstructBid Is For</h2>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -426,7 +426,7 @@ export default function Home() {
                 <h3 className="text-base font-bold text-navy">{role.title}</h3>
                 <p className="mt-2 text-sm text-text-muted">{role.desc}</p>
                 <Link to="/get-started" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-orange hover:text-orange-dark transition-colors">
-                  Join BuildSure <ArrowRight size={12} />
+                  Join ConstructBid <ArrowRight size={12} />
                 </Link>
               </div>
             ))}

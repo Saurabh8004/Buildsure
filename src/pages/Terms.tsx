@@ -13,12 +13,12 @@ export default function Terms() {
           <div className="space-y-8 text-text text-sm leading-relaxed">
             <div>
               <h2 className="text-lg font-bold text-navy mb-3">1. Acceptance of Terms</h2>
-              <p>By accessing or using BuildSure, you agree to be bound by these terms of service. If you do not agree, please do not use the platform.</p>
+              <p>By accessing or using ConstructBid, you agree to be bound by these terms of service. If you do not agree, please do not use the platform.</p>
             </div>
 
             <div>
               <h2 className="text-lg font-bold text-navy mb-3">2. Platform Description</h2>
-              <p>BuildSure is a construction procurement and project management platform that connects property owners with construction professionals. BuildSure is not a contractor, builder or construction company.</p>
+              <p>ConstructBid is a construction procurement and project management platform that connects property owners with construction professionals. ConstructBid is not a contractor, builder or construction company.</p>
             </div>
 
             <div>
@@ -39,27 +39,27 @@ export default function Terms() {
 
             <div>
               <h2 className="text-lg font-bold text-navy mb-3">5. Contractor Verification</h2>
-              <p>Verification on BuildSure indicates that a contractor has provided required documents and met basic eligibility criteria. It does not constitute a guarantee of work quality, financial stability or project completion.</p>
+              <p>Verification on ConstructBid indicates that a contractor has provided required documents and met basic eligibility criteria. It does not constitute a guarantee of work quality, financial stability or project completion.</p>
             </div>
 
             <div>
               <h2 className="text-lg font-bold text-navy mb-3">6. Client-Contractor Relationship</h2>
-              <p>BuildSure facilitates connections between clients and contractors. The actual construction contract is between the client and contractor directly. BuildSure is not a party to construction agreements.</p>
+              <p>ConstructBid facilitates connections between clients and contractors. The actual construction contract is between the client and contractor directly. ConstructBid is not a party to construction agreements.</p>
             </div>
 
             <div>
               <h2 className="text-lg font-bold text-navy mb-3">7. Quality Assurance</h2>
-              <p>Quality monitoring and inspection services on BuildSure are advisory in nature. They support transparency but do not constitute professional engineering certification or guarantee construction quality.</p>
+              <p>Quality monitoring and inspection services on ConstructBid are advisory in nature. They support transparency but do not constitute professional engineering certification or guarantee construction quality.</p>
             </div>
 
             <div>
               <h2 className="text-lg font-bold text-navy mb-3">8. Financing</h2>
-              <p>BuildSure may connect users with financing partners. Financing is subject to partner eligibility criteria and approval. BuildSure does not provide loans and does not guarantee financing approval.</p>
+              <p>ConstructBid may connect users with financing partners. Financing is subject to partner eligibility criteria and approval. ConstructBid does not provide loans and does not guarantee financing approval.</p>
             </div>
 
             <div>
               <h2 className="text-lg font-bold text-navy mb-3">9. Limitation of Liability</h2>
-              <p>BuildSure provides the platform "as is" and makes no warranties regarding construction outcomes, contractor performance or project results. Users engage contractors and professionals at their own risk.</p>
+              <p>ConstructBid provides the platform "as is" and makes no warranties regarding construction outcomes, contractor performance or project results. Users engage contractors and professionals at their own risk.</p>
             </div>
 
             <div>

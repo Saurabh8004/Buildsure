@@ -157,9 +157,9 @@ export default function ConfigCheck() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-2xl border border-border shadow-sm p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-navy mb-2">BuildSure Configuration Check</h1>
+            <h1 className="text-3xl font-bold text-navy mb-2">ConstructBid Configuration Check</h1>
             <p className="text-text-muted">
-              Verifying your BuildSure setup and backend connectivity
+              Verifying your ConstructBid setup and backend connectivity
             </p>
           </div>
 
