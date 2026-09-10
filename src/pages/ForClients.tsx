@@ -1,0 +1,170 @@
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ArrowRight, CheckCircle, ClipboardList, BarChart3, Search, Users, Eye, FileText, Banknote, Shield } from 'lucide-react';
+
+export default function ForClients() {
+  const features = [
+    { title: 'Post Requirement', desc: 'Create structured construction requirements with all necessary details.', icon: ClipboardList },
+    { title: 'Competitive Bids', desc: 'Receive multiple bids from verified contractors.', icon: BarChart3 },
+    { title: 'Smart Bid Comparison', desc: 'Compare bids across price, scope, timeline, materials and more.', icon: Search },
+    { title: 'Contractor Selection', desc: 'Choose the contractor that best fits your project needs.', icon: Users },
+    { title: 'Project Monitoring', desc: 'Track construction progress with clear visibility.', icon: Eye },
+    { title: 'Quality Assurance', desc: 'Independent inspections at key construction stages.', icon: Shield },
+    { title: 'Material Verification', desc: 'Record and verify materials used on site.', icon: FileText },
+    { title: 'Finance Assistance', desc: 'Connect with financing partners for construction funding.', icon: Banknote },
+  ];
+
+  return (
+    <div>
+      {/* Hero */}
+      <section className="bg-navy text-white py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-3xl"
+          >
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
+              Your Project.<br />Your Choice.<br />More Visibility.
+            </h1>
+            <p className="mt-4 text-lg text-white/80 leading-relaxed">
+              Create construction requirements and receive competitive bids from verified contractors. Compare, choose and monitor — all in one place.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link to="/get-started" className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
+                  Post Your Requirement <ArrowRight size={18} />
+                </Link>
+              </motion.div>
+            </div>
+            <p className="mt-3 text-sm text-white/60">Post your requirement free</p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-16 lg:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-bold text-navy mb-10">Everything You Need</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {features.map((feature, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  whileHover={{ y: -8 }}
+                  className="p-6 bg-bg rounded-2xl border border-border card-shadow hover:card-shadow-hover transition-all"
+                >
+                  <div className="w-11 h-11 bg-blue/10 rounded-xl flex items-center justify-center mb-4">
+                    <feature.icon size={20} className="text-blue" />
+                  </div>
+                  <h3 className="text-base font-bold text-navy">{feature.title}</h3>
+                  <p className="mt-2 text-sm text-text-muted leading-relaxed">{feature.desc}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Bid Comparison */}
+      <section className="py-16 lg:py-24 bg-bg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl font-bold text-navy tracking-tight">Smart Bid Comparison</h2>
+              <p className="mt-4 text-text-muted leading-relaxed">
+                Compare contractor bids across multiple parameters. Lowest price isn't always the best choice — ConstructBid helps you understand the complete offer before making the final decision.
+              </p>
+              <div className="mt-6 space-y-3">
+                {['Bid Amount', 'Timeline', 'Experience', 'Similar Projects', 'Scope Details', 'Materials', 'Warranty', 'Quality History'].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <CheckCircle size={16} className="text-teal shrink-0" />
+                    <span className="text-sm text-text">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="bg-white rounded-2xl p-6 border border-border card-shadow"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-semibold text-teal bg-teal/10 px-2 py-1 rounded">DEMO DATA</span>
+                <span className="text-xs text-text-muted">3 Bids Received</span>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border-light">
+                      <th className="text-left py-2 text-xs font-semibold text-text-muted">Parameter</th>
+                      <th className="text-center py-2 text-xs font-semibold text-text-muted">Contractor A</th>
+                      <th className="text-center py-2 text-xs font-semibold text-text-muted">Contractor B</th>
+                      <th className="text-center py-2 text-xs font-semibold text-text-muted">Contractor C</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border-light">
+                  {[
+                    ['Bid Amount', '₹28.5L', '₹31.2L', '₹33.8L'],
+                    ['Timeline', '10 months', '8 months', '9 months'],
+                    ['Experience', '8 years', '12 years', '15 years'],
+                    ['Similar Projects', '5', '12', '18'],
+                    ['Warranty', '1 year', '2 years', '3 years'],
+                  ].map((row, i) => (
+                    <tr key={i}>
+                      <td className="py-2.5 text-xs font-medium text-navy">{row[0]}</td>
+                      <td className="py-2.5 text-xs text-center text-text">{row[1]}</td>
+                      <td className="py-2.5 text-xs text-center text-text">{row[2]}</td>
+                      <td className="py-2.5 text-xs text-center text-text">{row[3]}</td>
+                    </tr>
+                  ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="text-[10px] font-semibold px-2 py-1 bg-blue/10 text-blue rounded">A: Lowest Price</span>
+                <span className="text-[10px] font-semibold px-2 py-1 bg-green/10 text-green rounded">B: Best Value</span>
+                <span className="text-[10px] font-semibold px-2 py-1 bg-orange/10 text-orange rounded">C: Best Rated</span>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-3xl font-bold text-navy">Start Your Construction Project</h2>
+            <p className="mt-3 text-text-muted">Post your requirement and receive competitive bids from verified contractors.</p>
+            <div className="mt-8">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
+                <Link to="/get-started" className="inline-flex items-center gap-2 px-8 py-4 text-base font-semibold text-white bg-orange hover:bg-orange-dark rounded-xl transition-all shadow-lg shadow-orange/20">
+                  Get Started as Client <ArrowRight size={18} />
+                </Link>
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    </div>
+  );
+}
