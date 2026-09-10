@@ -325,6 +325,35 @@ export const authService = {
   },
 
   /**
+   * Resend verification email
+   */
+  async resendVerification(email: string) {
+    console.log('[Auth] Resending verification email for:', email);
+    
+    try {
+      this.checkConfiguration();
+
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+      });
+
+      if (error) {
+        console.error('[Auth] Resend verification error:', error);
+        throw mapAuthError(error);
+      }
+
+      console.log('[Auth] ✓ Verification email resent');
+      return { success: true };
+    } catch (error: any) {
+      if (error instanceof AuthError) {
+        throw error;
+      }
+      throw mapAuthError(error);
+    }
+  },
+
+  /**
    * Logout user
    */
   async logout() {

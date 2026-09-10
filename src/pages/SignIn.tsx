@@ -68,8 +68,8 @@ export default function SignIn() {
         });
         
         if (result.emailConfirmationRequired) {
-          setSuccessMessage('Account created! Please check your email to verify your account, then sign in.');
-          setLoading(false);
+          // Redirect to verify email page with email parameter
+          navigate(`/verify-email?email=${encodeURIComponent(form.email)}`);
           return;
         }
         

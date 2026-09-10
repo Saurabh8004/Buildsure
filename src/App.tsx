@@ -18,6 +18,7 @@ import Terms from './pages/Terms';
 import Disclaimer from './pages/Disclaimer';
 import GetStarted from './pages/GetStarted';
 import SignIn from './pages/SignIn';
+import VerifyEmail from './pages/VerifyEmail';
 import Projects from './pages/Projects';
 import Contractors from './pages/Contractors';
 import CreateProject from './pages/CreateProject';
@@ -61,6 +62,7 @@ export default function App() {
         </Route>
         <Route path="/get-started" element={<GetStarted />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/config-check" element={<ConfigCheck />} />
         
         {/* Dashboard Routes */}
