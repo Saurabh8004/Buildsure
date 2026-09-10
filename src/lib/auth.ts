@@ -169,6 +169,8 @@ export const authService = {
         email,
         password,
         options: {
+          // CRITICAL: Set redirect URL for email verification
+          emailRedirectTo: `${window.location.origin}/verify-email`,
           data: {
             full_name: fullName,
             role: role,
