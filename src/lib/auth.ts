@@ -283,7 +283,7 @@ export const authService = {
    * Login user
    */
   async login(data: LoginData) {
-    console.log('[Auth] Starting login for:', data.email);
+    console.log('[AUTH] Login started for:', data.email);
     
     try {
       // Check configuration first
@@ -291,32 +291,34 @@ export const authService = {
 
       const { email, password } = data;
 
-      console.log('[Auth] Attempting sign in...');
+      console.log('[AUTH] Attempting signInWithPassword...');
       const { data: authData, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
-        console.error('[Auth] Login error:', error);
+        console.error('[AUTH] Login error:', error);
         throw mapAuthError(error);
       }
 
       if (!authData.user) {
+        console.error('[AUTH] Login failed - no user returned');
         throw new AuthError('Login failed. Please try again.', 'LOGIN_FAILED');
       }
 
-      console.log('[Auth] ✓ Login successful:', authData.user.id);
+      console.log('[AUTH] ✓ Login successful - user:', authData.user.id, 'session:', !!authData.session);
 
       // Log audit event
       try {
         await this.logAudit(authData.user.id, 'LOGIN_SUCCESS', 'user', authData.user.id);
       } catch (auditError) {
-        console.error('[Auth] Audit logging error:', auditError);
+        console.error('[AUTH] Audit logging error:', auditError);
       }
 
       return { user: authData.user, session: authData.session };
     } catch (error: any) {
+      console.error('[AUTH] Login exception:', error);
       if (error instanceof AuthError) {
         throw error;
       }
@@ -376,22 +378,31 @@ export const authService = {
    * Get current user with profile
    */
   async getCurrentUser() {
+    console.log('[AUTH] getCurrentUser() called');
+    
     try {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
+      console.log('[AUTH] getUser() result - user:', user?.email, 'error:', userError);
       
       if (userError) {
         console.error('[Auth] Get user error:', userError);
         throw mapAuthError(userError);
       }
       
-      if (!user) return null;
+      if (!user) {
+        console.log('[AUTH] No authenticated user found');
+        return null;
+      }
 
       // Fetch user profile
+      console.log('[AUTH] Fetching profile for user:', user.id);
       const { data: profile, error: profileError } = await supabase
         .from('users')
         .select('*')
         .eq('id', user.id)
         .single();
+
+      console.log('[AUTH] Profile fetch result - profile:', !!profile, 'error:', profileError);
 
       // If profile doesn't exist, create it
       if (profileError || !profile) {
@@ -400,6 +411,7 @@ export const authService = {
         const role = (user.user_metadata?.role as UserRole) || 'client';
         const fullName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
         
+        console.log('[AUTH] Creating profile with role:', role);
         const { data: newProfile, error: createError } = await supabase
           .from('users')
           .upsert({
@@ -419,6 +431,8 @@ export const authService = {
           throw mapAuthError(createError);
         }
 
+        console.log('[AUTH] Profile created successfully:', newProfile?.id);
+
         // Create role-specific profile
         try {
           await this.createRoleProfile(user.id, role);
@@ -432,11 +446,13 @@ export const authService = {
         };
       }
 
+      console.log('[AUTH] Profile loaded successfully:', profile.role);
       return {
         auth: user,
         profile,
       };
     } catch (error: any) {
+      console.error('[AUTH] getCurrentUser() error:', error);
       if (error instanceof AuthError) {
         throw error;
       }

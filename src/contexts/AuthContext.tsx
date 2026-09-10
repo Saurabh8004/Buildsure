@@ -41,20 +41,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function checkUser() {
+    console.log('[AUTH] checkUser() called');
     try {
       const currentUser = await authService.getCurrentUser();
+      console.log('[AUTH] checkUser() result - profile:', !!currentUser?.profile, 'role:', currentUser?.profile?.role);
       setUser(currentUser?.profile || null);
     } catch (error) {
-      console.error('Auth check error:', error);
+      console.error('[AUTH] checkUser() error:', error);
       setUser(null);
     } finally {
       setLoading(false);
+      console.log('[AUTH] checkUser() completed, loading set to false');
     }
   }
 
   async function login(email: string, password: string) {
-    await authService.login({ email, password });
-    await checkUser();
+    console.log('[AUTH] AuthContext.login() started for:', email);
+    
+    const result = await authService.login({ email, password });
+    console.log('[AUTH] authService.login() completed, session exists:', !!result.session);
+    
+    // Explicitly fetch and set user profile
+    console.log('[AUTH] Calling getCurrentUser()...');
+    const currentUser = await authService.getCurrentUser();
+    console.log('[AUTH] getCurrentUser() completed, profile exists:', !!currentUser?.profile);
+    
+    if (currentUser?.profile) {
+      console.log('[AUTH] Setting user state with role:', currentUser.profile.role);
+      setUser(currentUser.profile);
+      console.log('[AUTH] User state updated');
+    } else {
+      console.error('[AUTH] Failed to load user profile after login');
+      throw new Error('Failed to load user profile. Please try again.');
+    }
   }
 
   async function register(data: {

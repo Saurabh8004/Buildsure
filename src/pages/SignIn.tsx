@@ -24,8 +24,11 @@ export default function SignIn() {
   });
 
   useEffect(() => {
+    console.log('[AUTH] useEffect triggered - user:', user?.email, 'loading:', authLoading);
+    
     if (user && !authLoading) {
       const dashboardPath = user.role === 'admin' ? '/admin' : `/dashboard/${user.role}`;
+      console.log('[AUTH] Navigating to dashboard:', dashboardPath);
       navigate(dashboardPath, { replace: true });
     }
   }, [user, authLoading, navigate]);
@@ -75,7 +78,11 @@ export default function SignIn() {
         
         setSuccessMessage('Account created! Redirecting to your dashboard...');
       } else {
+        console.log('[AUTH] Starting login flow...');
         await login(form.email, form.password);
+        console.log('[AUTH] Login completed successfully');
+        
+        // Navigation will be handled by useEffect when user state updates
         setSuccessMessage('Welcome back! Redirecting...');
       }
     } catch (err: any) {
