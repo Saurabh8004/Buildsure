@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App.tsx";
-import { AuthProvider } from "./contexts/AuthContext.tsx";
-import { ErrorBoundary } from "./components/ErrorBoundary.tsx";
-import ConfigError from "./components/ConfigError.tsx";
-import { isSupabaseConfigured } from "./lib/supabase.ts";
+import App from "./App";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import ConfigError from "./components/ConfigError";
+import { isSupabaseConfigured } from "./lib/supabase";
 
 // Check configuration before rendering
 const isConfigured = isSupabaseConfigured();
