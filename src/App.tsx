@@ -56,6 +56,10 @@ import MyProjects from './pages/client/MyProjects';
 import PostProject from './pages/client/PostProject';
 import BidsReceived from './pages/client/BidsReceived';
 import CompareBids from './pages/client/CompareBids';
+import BidDetails from './pages/client/BidDetails';
+import ContractorSelection from './pages/client/ContractorSelection';
+import ContractAward from './pages/client/ContractAward';
+import TenderManagement from './pages/client/TenderManagement';
 import ProgressClient from './pages/client/Progress';
 import MilestonesClient from './pages/client/Milestones';
 import QAInspectionsClient from './pages/client/QAInspections';
@@ -106,14 +110,6 @@ export default function App() {
         
         {/* Role-Based Dashboard Routes */}
         <Route
-          path="/client"
-          element={
-            <ProtectedRoute requiredRole="client">
-              <ClientDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/contractor"
           element={
             <ProtectedRoute requiredRole="contractor">
@@ -150,6 +146,11 @@ export default function App() {
           <Route index element={<ClientDashboardNew />} />
           <Route path="projects" element={<MyProjects />} />
           <Route path="projects/new" element={<PostProject />} />
+          <Route path="projects/:projectId/tenders" element={<TenderManagement />} />
+          <Route path="tenders/:tenderId/compare" element={<CompareBids />} />
+          <Route path="bids/:bidId" element={<BidDetails />} />
+          <Route path="bids/:bidId/select" element={<ContractorSelection />} />
+          <Route path="bids/:bidId/award" element={<ContractAward />} />
           <Route path="bids" element={<BidsReceived />} />
           <Route path="compare" element={<CompareBids />} />
           <Route path="progress" element={<ProgressClient />} />
