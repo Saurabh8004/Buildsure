@@ -1,5 +1,5 @@
 -- ============================================================================
--- COMPLETE DATABASE SCHEMA SYNC - REVISED
+-- COMPLETE DATABASE SCHEMA SYNC - FINAL CORRECTED VERSION
 -- Fixes: RLS recursion, auth trigger, role support, security
 -- Safe to run multiple times - uses IF NOT EXISTS throughout
 -- ============================================================================
@@ -26,6 +26,24 @@ BEGIN
   WHERE id = user_id;
   
   RETURN user_role;
+END;
+$$;
+
+-- Function: Get user verification status (bypasses RLS to prevent recursion)
+CREATE OR REPLACE FUNCTION public.get_user_verification_status(user_id UUID)
+RETURNS TEXT
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_temp
+AS $$
+DECLARE
+  user_status TEXT;
+BEGIN
+  SELECT verification_status INTO user_status
+  FROM public.users
+  WHERE id = user_id;
+  
+  RETURN user_status;
 END;
 $$;
 
@@ -80,6 +98,16 @@ BEGIN
 END;
 $$;
 
+-- Revoke EXECUTE privileges from anon and public for security functions
+REVOKE EXECUTE ON FUNCTION public.get_user_role(UUID) FROM anon, public;
+REVOKE EXECUTE ON FUNCTION public.get_user_verification_status(UUID) FROM anon, public;
+REVOKE EXECUTE ON FUNCTION public.is_admin(UUID) FROM anon, public;
+
+-- Grant EXECUTE only to authenticated users
+GRANT EXECUTE ON FUNCTION public.get_user_role(UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_user_verification_status(UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.is_admin(UUID) TO authenticated;
+
 -- ============================================================================
 -- SECTION 2: CORE TABLES
 -- ============================================================================
@@ -117,25 +145,28 @@ CREATE POLICY "Users can view own profile"
   ON public.users FOR SELECT TO authenticated
   USING (auth.uid() = id);
 
+-- FIXED: Uses helper functions instead of direct queries to avoid RLS recursion
 CREATE POLICY "Users can update own profile"
   ON public.users FOR UPDATE TO authenticated
   USING (auth.uid() = id)
   WITH CHECK (
     auth.uid() = id AND
-    -- Users cannot change their own role
-    role = (SELECT role FROM public.users WHERE id = auth.uid()) AND
-    -- Users cannot change their own verification_status
-    verification_status = (SELECT verification_status FROM public.users WHERE id = auth.uid())
+    -- Users cannot change their own role (must match current role)
+    role = public.get_user_role(auth.uid()) AND
+    -- Users cannot change their own verification_status (must match current status)
+    verification_status = public.get_user_verification_status(auth.uid())
   );
 
 CREATE POLICY "Users can insert own profile"
   ON public.users FOR INSERT TO authenticated
   WITH CHECK (auth.uid() = id);
 
+-- FIXED: Uses helper function instead of direct query to avoid RLS recursion
 CREATE POLICY "Admins can view all users"
   ON public.users FOR SELECT TO authenticated
   USING (public.is_admin(auth.uid()));
 
+-- FIXED: Uses helper function instead of direct query to avoid RLS recursion
 CREATE POLICY "Admins can update all users"
   ON public.users FOR UPDATE TO authenticated
   USING (public.is_admin(auth.uid()));
@@ -602,4 +633,5 @@ BEGIN
   RAISE NOTICE '✓ PostgREST schema cache refreshed';
   RAISE NOTICE '✓ RLS recursion fixed using SECURITY DEFINER functions';
   RAISE NOTICE '✓ Auth trigger created for automatic profile creation';
+  RAISE NOTICE '✓ Helper function privileges secured';
 END $$;
