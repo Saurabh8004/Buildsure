@@ -1,8 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Building2, MapPin, Calendar, DollarSign, User, Mail, Phone, FileText, CheckCircle } from 'lucide-react';
+import { Users, Building2, MapPin, Calendar, DollarSign, User, Mail, Phone, FileText, CheckCircle, Loader2 } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+import { supabase } from '../../lib/supabase';
 
 export default function ArchitectServices() {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [requestId, setRequestId] = useState<string | null>(null);
+  
   const [formData, setFormData] = useState({
     serviceType: '',
     projectType: '',
@@ -11,15 +19,23 @@ export default function ArchitectServices() {
     projectDescription: '',
     timeline: '',
     budget: '',
-    fullName: '',
-    email: '',
+    fullName: user?.full_name || '',
+    email: user?.email || '',
     phone: '',
-    preferredContact: 'email',
-    existingDrawings: 'no',
+    preferredContact: 'email' as 'email' | 'phone' | 'whatsapp',
+    existingDrawings: 'no' as 'yes' | 'no' | 'partial',
     additionalRequirements: '',
   });
 
-  const [submitted, setSubmitted] = useState(false);
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        fullName: user.full_name || '',
+        email: user.email || '',
+      }));
+    }
+  }, [user]);
 
   const serviceTypes = [
     { value: 'architectural_design', label: 'Architectural Design' },
@@ -44,10 +60,57 @@ export default function ArchitectServices() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Architect service request submitted:', formData);
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+
+    if (!user) {
+      setError('You must be logged in to submit a request');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error: insertError } = await supabase
+        .from('architect_service_requests')
+        .insert({
+          client_id: user.id,
+          service_type: formData.serviceType,
+          project_type: formData.projectType,
+          project_location: formData.projectLocation,
+          project_size: formData.projectSize ? parseInt(formData.projectSize) : null,
+          project_description: formData.projectDescription,
+          timeline: formData.timeline || null,
+          budget: formData.budget || null,
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          preferred_contact: formData.preferredContact,
+          existing_drawings: formData.existingDrawings,
+          additional_requirements: formData.additionalRequirements || null,
+          status: 'submitted',
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Supabase insert error:', insertError);
+        setError('Failed to submit request. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      if (data) {
+        setRequestId(data.id);
+        setSubmitted(true);
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -62,6 +125,11 @@ export default function ArchitectServices() {
             <CheckCircle size={40} className="text-green" />
           </div>
           <h2 className="text-2xl font-bold text-navy mb-4">Request Submitted Successfully!</h2>
+          {requestId && (
+            <p className="text-sm text-text-muted mb-4">
+              Request ID: <span className="font-mono font-semibold">{requestId}</span>
+            </p>
+          )}
           <p className="text-text-muted mb-6">
             Thank you for submitting your service request. Our team will review your requirements and connect you with suitable architects/engineers.
           </p>
@@ -87,7 +155,25 @@ export default function ArchitectServices() {
             </ul>
           </div>
           <button
-            onClick={() => setSubmitted(false)}
+            onClick={() => {
+              setSubmitted(false);
+              setRequestId(null);
+              setFormData({
+                serviceType: '',
+                projectType: '',
+                projectLocation: '',
+                projectSize: '',
+                projectDescription: '',
+                timeline: '',
+                budget: '',
+                fullName: user?.full_name || '',
+                email: user?.email || '',
+                phone: '',
+                preferredContact: 'email',
+                existingDrawings: 'no',
+                additionalRequirements: '',
+              });
+            }}
             className="px-6 py-3 bg-orange text-white rounded-xl font-semibold hover:bg-orange-dark transition-colors"
           >
             Submit Another Request
@@ -393,14 +479,31 @@ export default function ArchitectServices() {
                 </div>
               </div>
 
+              {/* Error Message */}
+              {error && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+                  <p className="text-sm text-red-900">{error}</p>
+                </div>
+              )}
+
               {/* Submit Button */}
               <div className="pt-4 border-t border-border">
                 <button
                   type="submit"
-                  className="w-full px-6 py-4 bg-orange text-white rounded-xl font-semibold hover:bg-orange-dark transition-colors flex items-center justify-center gap-2"
+                  disabled={loading}
+                  className="w-full px-6 py-4 bg-orange text-white rounded-xl font-semibold hover:bg-orange-dark transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Users size={20} />
-                  Submit Service Request
+                  {loading ? (
+                    <>
+                      <Loader2 size={20} className="animate-spin" />
+                      Submitting Request...
+                    </>
+                  ) : (
+                    <>
+                      <Users size={20} />
+                      Submit Service Request
+                    </>
+                  )}
                 </button>
                 <p className="text-xs text-text-muted mt-3 text-center">
                   By submitting this form, you agree to be contacted by architects/engineers regarding your request.

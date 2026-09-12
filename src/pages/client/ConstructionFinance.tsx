@@ -1,8 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { DollarSign, Building2, Calendar, User, Mail, Phone, FileText, CheckCircle } from 'lucide-react';
+import { DollarSign, Building2, Calendar, User, Mail, Phone, FileText, CheckCircle, Loader2 } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+import { supabase } from '../../lib/supabase';
 
 export default function ConstructionFinance() {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [requestId, setRequestId] = useState<string | null>(null);
+  
   const [formData, setFormData] = useState({
     financingType: '',
     amountNeeded: '',
@@ -10,8 +18,8 @@ export default function ConstructionFinance() {
     projectLocation: '',
     projectDescription: '',
     timeline: '',
-    fullName: '',
-    email: '',
+    fullName: user?.full_name || '',
+    email: user?.email || '',
     phone: '',
     employmentStatus: '',
     annualIncome: '',
@@ -19,7 +27,15 @@ export default function ConstructionFinance() {
     additionalNotes: '',
   });
 
-  const [submitted, setSubmitted] = useState(false);
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        fullName: user.full_name || '',
+        email: user.email || '',
+      }));
+    }
+  }, [user]);
 
   const financingTypes = [
     { value: 'home_construction', label: 'Home Construction Loan' },
@@ -48,11 +64,54 @@ export default function ConstructionFinance() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log('Financing request submitted:', formData);
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+
+    if (!user) {
+      setError('You must be logged in to submit a request');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error: insertError } = await supabase
+        .from('financing_requests')
+        .insert({
+          user_id: user.id,
+          financing_purpose: formData.financingType,
+          applicant_type: 'owner',
+          project_location: formData.projectLocation,
+          estimated_cost: formData.annualIncome ? parseFloat(formData.annualIncome) : null,
+          financing_amount: parseFloat(formData.amountNeeded),
+          project_description: formData.projectDescription || null,
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          preferred_contact: 'email',
+          status: 'new',
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Supabase insert error:', insertError);
+        setError('Failed to submit request. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      if (data) {
+        setRequestId(data.id);
+        setSubmitted(true);
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      setError('An unexpected error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -67,6 +126,11 @@ export default function ConstructionFinance() {
             <CheckCircle size={40} className="text-green" />
           </div>
           <h2 className="text-2xl font-bold text-navy mb-4">Request Submitted Successfully!</h2>
+          {requestId && (
+            <p className="text-sm text-text-muted mb-4">
+              Request ID: <span className="font-mono font-semibold">{requestId}</span>
+            </p>
+          )}
           <p className="text-text-muted mb-6">
             Thank you for submitting your financing request. Our team will review your application and connect you with suitable financing partners.
           </p>
@@ -92,7 +156,25 @@ export default function ConstructionFinance() {
             </ul>
           </div>
           <button
-            onClick={() => setSubmitted(false)}
+            onClick={() => {
+              setSubmitted(false);
+              setRequestId(null);
+              setFormData({
+                financingType: '',
+                amountNeeded: '',
+                projectType: '',
+                projectLocation: '',
+                projectDescription: '',
+                timeline: '',
+                fullName: user?.full_name || '',
+                email: user?.email || '',
+                phone: '',
+                employmentStatus: '',
+                annualIncome: '',
+                existingLoans: '',
+                additionalNotes: '',
+              });
+            }}
             className="px-6 py-3 bg-orange text-white rounded-xl font-semibold hover:bg-orange-dark transition-colors"
           >
             Submit Another Request
@@ -392,14 +474,31 @@ export default function ConstructionFinance() {
                 </div>
               </div>
 
+              {/* Error Message */}
+              {error && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+                  <p className="text-sm text-red-900">{error}</p>
+                </div>
+              )}
+
               {/* Submit Button */}
               <div className="pt-4 border-t border-border">
                 <button
                   type="submit"
-                  className="w-full px-6 py-4 bg-orange text-white rounded-xl font-semibold hover:bg-orange-dark transition-colors flex items-center justify-center gap-2"
+                  disabled={loading}
+                  className="w-full px-6 py-4 bg-orange text-white rounded-xl font-semibold hover:bg-orange-dark transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <DollarSign size={20} />
-                  Submit Financing Request
+                  {loading ? (
+                    <>
+                      <Loader2 size={20} className="animate-spin" />
+                      Submitting Request...
+                    </>
+                  ) : (
+                    <>
+                      <DollarSign size={20} />
+                      Submit Financing Request
+                    </>
+                  )}
                 </button>
                 <p className="text-xs text-text-muted mt-3 text-center">
                   By submitting this form, you agree to be contacted by financing partners regarding your request.
