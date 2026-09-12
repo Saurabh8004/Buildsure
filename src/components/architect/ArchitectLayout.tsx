@@ -2,14 +2,12 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  LayoutDashboard, Search, FileText, Award, Briefcase, 
-  TrendingUp, CheckSquare, AlertTriangle, RefreshCw,
-  FolderOpen, CreditCard, Bell, MessageSquare, User,
-  Settings, LogOut, Menu, X, ChevronDown
+  LayoutDashboard, FileText, Ruler, CheckCircle,
+  Bell, MessageSquare, User, Settings, LogOut, Menu, X, ChevronDown
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
-export default function ContractorLayout() {
+export default function ArchitectLayout() {
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -18,40 +16,25 @@ export default function ContractorLayout() {
 
   const menuItems = [
     {
-      category: 'WORK',
+      category: 'DASHBOARD',
       items: [
-        { icon: LayoutDashboard, label: 'Dashboard', path: '/contractor' },
-        { icon: Search, label: 'Find Projects', path: '/contractor/projects' },
-        { icon: FileText, label: 'My Bids', path: '/contractor/bids' },
-        { icon: Award, label: 'Awarded Projects', path: '/contractor/awarded-projects' },
-        { icon: Briefcase, label: 'Active Projects', path: '/contractor/active-projects' },
+        { icon: LayoutDashboard, label: 'Overview', path: '/architect' },
       ]
     },
     {
-      category: 'PROJECT MANAGEMENT',
+      category: 'PROJECTS',
       items: [
-        { icon: TrendingUp, label: 'Progress', path: '/contractor/progress' },
-        { icon: CheckSquare, label: 'Milestones', path: '/contractor/milestones' },
-        { icon: AlertTriangle, label: 'QA & Inspections', path: '/contractor/qa' },
-        { icon: AlertTriangle, label: 'Quality Issues', path: '/contractor/quality-issues' },
-        { icon: RefreshCw, label: 'Corrective Actions', path: '/contractor/corrective-actions' },
-        { icon: RefreshCw, label: 'Reinspection', path: '/contractor/reinspection' },
-      ]
-    },
-    {
-      category: 'DOCUMENTS',
-      items: [
-        { icon: FolderOpen, label: 'Documents', path: '/contractor/documents' },
-        { icon: CreditCard, label: 'Payments', path: '/contractor/payments' },
+        { icon: FileText, label: 'Assigned Projects', path: '/architect/projects' },
+        { icon: Ruler, label: 'Design Tasks', path: '/architect/design' },
       ]
     },
     {
       category: 'ACCOUNT',
       items: [
-        { icon: Bell, label: 'Notifications', path: '/contractor/notifications' },
-        { icon: MessageSquare, label: 'Messages', path: '/contractor/messages' },
-        { icon: User, label: 'Profile', path: '/contractor/profile' },
-        { icon: Settings, label: 'Settings', path: '/contractor/settings' },
+        { icon: Bell, label: 'Notifications', path: '/architect/notifications' },
+        { icon: MessageSquare, label: 'Messages', path: '/architect/messages' },
+        { icon: User, label: 'Profile', path: '/architect/profile' },
+        { icon: Settings, label: 'Settings', path: '/architect/settings' },
       ]
     }
   ];
@@ -63,8 +46,8 @@ export default function ContractorLayout() {
   };
 
   const isActive = (path: string) => {
-    if (path === '/contractor') {
-      return location.pathname === '/contractor';
+    if (path === '/architect') {
+      return location.pathname === '/architect';
     }
     return location.pathname.startsWith(path);
   };
@@ -76,7 +59,7 @@ export default function ContractorLayout() {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="h-16 flex items-center justify-between px-6 border-b border-border">
-            <Link to="/contractor" className="flex items-center gap-2">
+            <Link to="/architect" className="flex items-center gap-2">
               <div className="w-8 h-8 bg-navy rounded-lg flex items-center justify-center">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
                   <path d="M3 21h18" />
@@ -131,7 +114,7 @@ export default function ContractorLayout() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-navy truncate">
-                  {user?.full_name || 'User'}
+                  {user?.full_name || 'Architect'}
                 </p>
                 <p className="text-xs text-text-muted truncate">
                   {user?.email}
@@ -178,7 +161,7 @@ export default function ContractorLayout() {
                   <User size={16} className="text-orange" />
                 </div>
                 <span className="text-sm font-medium text-navy hidden sm:block">
-                  {user?.full_name || 'User'}
+                  {user?.full_name || 'Architect'}
                 </span>
                 <ChevronDown size={16} className="text-text-muted" />
               </button>
@@ -198,7 +181,7 @@ export default function ContractorLayout() {
                     </div>
                     <div className="p-2">
                       <Link
-                        to="/contractor/profile"
+                        to="/architect/profile"
                         onClick={() => setUserMenuOpen(false)}
                         className="flex items-center gap-2 px-3 py-2 text-sm text-text hover:bg-bg-alt rounded-lg transition-colors"
                       >
@@ -206,7 +189,7 @@ export default function ContractorLayout() {
                         Profile
                       </Link>
                       <Link
-                        to="/contractor/settings"
+                        to="/architect/settings"
                         onClick={() => setUserMenuOpen(false)}
                         className="flex items-center gap-2 px-3 py-2 text-sm text-text hover:bg-bg-alt rounded-lg transition-colors"
                       >

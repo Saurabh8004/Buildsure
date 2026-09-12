@@ -52,6 +52,10 @@ import Settings from './pages/contractor/Settings';
 // Client imports
 import ClientLayout from './components/client/ClientLayout';
 import ClientDashboardNew from './pages/client/ClientDashboard';
+// Architect imports
+import ArchitectLayout from './components/architect/ArchitectLayout';
+// Inspector imports
+import InspectorLayout from './components/inspector/InspectorLayout';
 import MyProjects from './pages/client/MyProjects';
 import PostProject from './pages/client/PostProject';
 import BidsReceived from './pages/client/BidsReceived';
@@ -172,18 +176,22 @@ export default function App() {
           path="/architect"
           element={
             <ProtectedRoute requiredRole="architect">
-              <ArchitectDashboard />
+              <ArchitectLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<ArchitectDashboard />} />
+        </Route>
         <Route
           path="/inspector"
           element={
             <ProtectedRoute requiredRole="inspector">
-              <InspectorDashboard />
+              <InspectorLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<InspectorDashboard />} />
+        </Route>
         <Route
           path="/admin"
           element={

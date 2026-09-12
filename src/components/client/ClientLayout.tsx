@@ -59,6 +59,7 @@ export default function ClientLayout() {
   ];
 
   const handleLogout = async () => {
+    setUserMenuOpen(false);
     await logout();
     navigate('/');
   };
