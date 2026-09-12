@@ -65,17 +65,9 @@ export default function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/config-check" element={<ConfigCheck />} />
         
-        {/* Dashboard Routes */}
+        {/* Role-Based Dashboard Routes */}
         <Route
-          path="/dashboard/contractor"
-          element={
-            <ProtectedRoute requiredRole="contractor">
-              <ContractorDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard/client"
+          path="/client"
           element={
             <ProtectedRoute requiredRole="client">
               <ClientDashboard />
@@ -83,7 +75,15 @@ export default function App() {
           }
         />
         <Route
-          path="/dashboard/architect"
+          path="/contractor"
+          element={
+            <ProtectedRoute requiredRole="contractor">
+              <ContractorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/architect"
           element={
             <ProtectedRoute requiredRole="architect">
               <ArchitectDashboard />
@@ -91,7 +91,7 @@ export default function App() {
           }
         />
         <Route
-          path="/dashboard/inspector"
+          path="/inspector"
           element={
             <ProtectedRoute requiredRole="inspector">
               <InspectorDashboard />

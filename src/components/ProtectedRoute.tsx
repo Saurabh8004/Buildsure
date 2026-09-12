@@ -24,7 +24,7 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
 
   if (requiredRole && user.role !== requiredRole) {
     // Redirect to user's own dashboard instead of home
-    const userDashboardPath = user.role === 'admin' ? '/admin' : `/dashboard/${user.role}`;
+    const userDashboardPath = user.role === 'admin' ? '/admin' : `/${user.role}`;
     return <Navigate to={userDashboardPath} replace />;
   }
 

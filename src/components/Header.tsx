@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User, LogOut, ChevronDown } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 const navLinks = [
   { to: '/', label: 'Home' },
@@ -14,7 +15,9 @@ const navLinks = [
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -100,22 +103,85 @@ export default function Header() {
 
             {/* Desktop CTA */}
             <div className="hidden lg:flex items-center gap-3">
-              <Link
-                to="/signin"
-                className={`px-4 py-2 text-sm font-medium transition-colors ${
-                  scrolled ? 'text-text hover:text-navy' : 'text-white/80 hover:text-white'
-                }`}
-              >
-                Sign In
-              </Link>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  to="/get-started"
-                  className="px-5 py-2.5 text-sm font-semibold text-white bg-orange hover:bg-orange-dark rounded-lg transition-all shadow-lg shadow-orange/20"
-                >
-                  Get Started
-                </Link>
-              </motion.div>
+              {user ? (
+                // User Profile Dropdown
+                <div className="relative">
+                  <button
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                      scrolled 
+                        ? 'text-text hover:bg-bg-alt' 
+                        : 'text-white hover:bg-white/10'
+                    }`}
+                  >
+                    <div className="w-8 h-8 bg-orange/20 rounded-full flex items-center justify-center">
+                      <User size={16} className={scrolled ? 'text-navy' : 'text-white'} />
+                    </div>
+                    <span className="text-sm font-medium">
+                      {user.full_name || user.email?.split('@')[0] || 'User'}
+                    </span>
+                    <ChevronDown size={14} className={scrolled ? 'text-text-muted' : 'text-white/70'} />
+                  </button>
+
+                  <AnimatePresence>
+                    {userMenuOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-border overflow-hidden"
+                      >
+                        <div className="p-4 bg-bg border-b border-border">
+                          <p className="text-sm font-semibold text-navy">{user.full_name || 'User'}</p>
+                          <p className="text-xs text-text-muted mt-1">{user.email}</p>
+                          <p className="text-xs text-orange font-medium mt-1 capitalize">{user.role}</p>
+                        </div>
+                        <div className="p-2">
+                          <Link
+                            to={`/${user.role}`}
+                            onClick={() => setUserMenuOpen(false)}
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-text hover:bg-bg-alt rounded-lg transition-colors"
+                          >
+                            <User size={16} />
+                            My Dashboard
+                          </Link>
+                          <button
+                            onClick={async () => {
+                              await logout();
+                              setUserMenuOpen(false);
+                            }}
+                            className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors w-full text-left"
+                          >
+                            <LogOut size={16} />
+                            Sign Out
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                // Not authenticated
+                <>
+                  <Link
+                    to="/signin"
+                    className={`px-4 py-2 text-sm font-medium transition-colors ${
+                      scrolled ? 'text-text hover:text-navy' : 'text-white/80 hover:text-white'
+                    }`}
+                  >
+                    Sign In
+                  </Link>
+                  <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                    <Link
+                      to="/get-started"
+                      className="px-5 py-2.5 text-sm font-semibold text-white bg-orange hover:bg-orange-dark rounded-lg transition-all shadow-lg shadow-orange/20"
+                    >
+                      Get Started
+                    </Link>
+                  </motion.div>
+                </>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -194,20 +260,50 @@ export default function Header() {
                   transition={{ delay: 0.5 }}
                   className="pt-4 border-t border-border flex flex-col gap-2"
                 >
-                  <Link
-                    to="/signin"
-                    onClick={() => setMobileOpen(false)}
-                    className="block text-center px-4 py-3 text-sm font-medium text-text border border-border rounded-lg hover:bg-bg-alt transition-colors"
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    to="/get-started"
-                    onClick={() => setMobileOpen(false)}
-                    className="block text-center px-4 py-3 text-sm font-semibold text-white bg-orange rounded-lg hover:bg-orange-dark transition-colors"
-                  >
-                    Get Started
-                  </Link>
+                  {user ? (
+                    <>
+                      <div className="px-4 py-3 bg-bg rounded-lg mb-2">
+                        <p className="text-sm font-semibold text-navy">{user.full_name || 'User'}</p>
+                        <p className="text-xs text-text-muted mt-1">{user.email}</p>
+                        <p className="text-xs text-orange font-medium mt-1 capitalize">{user.role}</p>
+                      </div>
+                      <Link
+                        to={`/${user.role}`}
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-text border border-border rounded-lg hover:bg-bg-alt transition-colors"
+                      >
+                        <User size={16} />
+                        My Dashboard
+                      </Link>
+                      <button
+                        onClick={async () => {
+                          await logout();
+                          setMobileOpen(false);
+                        }}
+                        className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
+                      >
+                        <LogOut size={16} />
+                        Sign Out
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to="/signin"
+                        onClick={() => setMobileOpen(false)}
+                        className="block text-center px-4 py-3 text-sm font-medium text-text border border-border rounded-lg hover:bg-bg-alt transition-colors"
+                      >
+                        Sign In
+                      </Link>
+                      <Link
+                        to="/get-started"
+                        onClick={() => setMobileOpen(false)}
+                        className="block text-center px-4 py-3 text-sm font-semibold text-white bg-orange rounded-lg hover:bg-orange-dark transition-colors"
+                      >
+                        Get Started
+                      </Link>
+                    </>
+                  )}
                 </motion.div>
               </nav>
             </div>
