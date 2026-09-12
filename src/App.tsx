@@ -31,6 +31,24 @@ import ArchitectDashboard from './pages/ArchitectDashboard';
 import InspectorDashboard from './pages/InspectorDashboard';
 import ConfigCheck from './pages/ConfigCheck';
 import ProtectedRoute from './components/ProtectedRoute';
+import ContractorLayout from './components/contractor/ContractorLayout';
+import ContractorDashboardNew from './pages/contractor/ContractorDashboard';
+import FindProjects from './pages/contractor/FindProjects';
+import MyBids from './pages/contractor/MyBids';
+import AwardedProjects from './pages/contractor/AwardedProjects';
+import ActiveProjects from './pages/contractor/ActiveProjects';
+import Progress from './pages/contractor/Progress';
+import Milestones from './pages/contractor/Milestones';
+import QAInspections from './pages/contractor/QAInspections';
+import QualityIssues from './pages/contractor/QualityIssues';
+import CorrectiveActions from './pages/contractor/CorrectiveActions';
+import Reinspection from './pages/contractor/Reinspection';
+import Documents from './pages/contractor/Documents';
+import Payments from './pages/contractor/Payments';
+import Notifications from './pages/contractor/Notifications';
+import Messages from './pages/contractor/Messages';
+import ContractorProfileNew from './pages/contractor/ContractorProfile';
+import Settings from './pages/contractor/Settings';
 
 export default function App() {
   return (
@@ -78,10 +96,28 @@ export default function App() {
           path="/contractor"
           element={
             <ProtectedRoute requiredRole="contractor">
-              <ContractorDashboard />
+              <ContractorLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<ContractorDashboardNew />} />
+          <Route path="projects" element={<FindProjects />} />
+          <Route path="bids" element={<MyBids />} />
+          <Route path="awarded-projects" element={<AwardedProjects />} />
+          <Route path="active-projects" element={<ActiveProjects />} />
+          <Route path="progress" element={<Progress />} />
+          <Route path="milestones" element={<Milestones />} />
+          <Route path="qa" element={<QAInspections />} />
+          <Route path="quality-issues" element={<QualityIssues />} />
+          <Route path="corrective-actions" element={<CorrectiveActions />} />
+          <Route path="reinspection" element={<Reinspection />} />
+          <Route path="documents" element={<Documents />} />
+          <Route path="payments" element={<Payments />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="profile" element={<ContractorProfileNew />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
         <Route
           path="/architect"
           element={
