@@ -49,6 +49,27 @@ import Notifications from './pages/contractor/Notifications';
 import Messages from './pages/contractor/Messages';
 import ContractorProfileNew from './pages/contractor/ContractorProfile';
 import Settings from './pages/contractor/Settings';
+// Client imports
+import ClientLayout from './components/client/ClientLayout';
+import ClientDashboardNew from './pages/client/ClientDashboard';
+import MyProjects from './pages/client/MyProjects';
+import PostProject from './pages/client/PostProject';
+import BidsReceived from './pages/client/BidsReceived';
+import CompareBids from './pages/client/CompareBids';
+import ProgressClient from './pages/client/Progress';
+import MilestonesClient from './pages/client/Milestones';
+import QAInspectionsClient from './pages/client/QAInspections';
+import QualityIssuesClient from './pages/client/QualityIssues';
+import CorrectiveActionsClient from './pages/client/CorrectiveActions';
+import ReinspectionClient from './pages/client/Reinspection';
+import DocumentsClient from './pages/client/Documents';
+import PaymentsClient from './pages/client/Payments';
+import ArchitectServices from './pages/client/ArchitectServices';
+import ConstructionFinance from './pages/client/ConstructionFinance';
+import NotificationsClient from './pages/client/Notifications';
+import MessagesClient from './pages/client/Messages';
+import ClientProfileNew from './pages/client/ClientProfile';
+import SettingsClient from './pages/client/Settings';
 
 export default function App() {
   return (
@@ -117,6 +138,34 @@ export default function App() {
           <Route path="messages" element={<Messages />} />
           <Route path="profile" element={<ContractorProfileNew />} />
           <Route path="settings" element={<Settings />} />
+        </Route>
+        <Route
+          path="/client"
+          element={
+            <ProtectedRoute requiredRole="client">
+              <ClientLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<ClientDashboardNew />} />
+          <Route path="projects" element={<MyProjects />} />
+          <Route path="projects/new" element={<PostProject />} />
+          <Route path="bids" element={<BidsReceived />} />
+          <Route path="compare" element={<CompareBids />} />
+          <Route path="progress" element={<ProgressClient />} />
+          <Route path="milestones" element={<MilestonesClient />} />
+          <Route path="qa" element={<QAInspectionsClient />} />
+          <Route path="quality-issues" element={<QualityIssuesClient />} />
+          <Route path="corrective-actions" element={<CorrectiveActionsClient />} />
+          <Route path="reinspection" element={<ReinspectionClient />} />
+          <Route path="documents" element={<DocumentsClient />} />
+          <Route path="payments" element={<PaymentsClient />} />
+          <Route path="architect-services" element={<ArchitectServices />} />
+          <Route path="finance" element={<ConstructionFinance />} />
+          <Route path="notifications" element={<NotificationsClient />} />
+          <Route path="messages" element={<MessagesClient />} />
+          <Route path="profile" element={<ClientProfileNew />} />
+          <Route path="settings" element={<SettingsClient />} />
         </Route>
         <Route
           path="/architect"
