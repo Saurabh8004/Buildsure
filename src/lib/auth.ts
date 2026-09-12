@@ -301,33 +301,6 @@ export const authService = {
 
       console.log('[Auth] ✓ Registration complete');
       
-      // TEMPORARY: Auto-sign in after registration (bypasses email verification)
-      // This is for development/testing. Remove this when implementing proper email verification
-      if (emailConfirmationRequired) {
-        console.log('[Auth] TEMP: Auto-signing in after registration (email verification disabled)');
-        try {
-          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-          });
-          
-          if (signInError) {
-            console.error('[Auth] Auto-signin failed:', signInError);
-            // Continue anyway - user can sign in manually
-          } else {
-            console.log('[Auth] ✓ Auto-signin successful');
-            return {
-              user: signInData.user,
-              session: signInData.session,
-              emailConfirmationRequired: false, // Override - user is now signed in
-            };
-          }
-        } catch (autoSigninError) {
-          console.error('[Auth] Auto-signin error:', autoSigninError);
-          // Continue anyway - user can sign in manually
-        }
-      }
-      
       return { 
         user: authData.user, 
         session: authData.session,
@@ -390,15 +363,7 @@ export const authService = {
 
       if (error) {
         console.error('[AUTH] Login error:', error);
-        
-        // TEMPORARY: Ignore email verification errors (email verification disabled)
-        // Remove this when implementing proper email verification
-        if (error.message?.includes('Email not confirmed')) {
-          console.log('[AUTH] TEMP: Email not confirmed error ignored (email verification disabled)');
-          // Don't throw - allow login even if email not confirmed
-        } else {
-          throw mapAuthError(error);
-        }
+        throw mapAuthError(error);
       }
 
       if (!authData.user) {
