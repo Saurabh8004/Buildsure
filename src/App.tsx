@@ -25,6 +25,7 @@ import CreateProject from './pages/CreateProject';
 import ProjectDetails from './pages/ProjectDetails';
 import ContractorProfile from './pages/ContractorProfile';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminRequests from './pages/admin/AdminRequests';
 import ContractorDashboard from './pages/ContractorDashboard';
 import ClientDashboard from './pages/ClientDashboard';
 import ArchitectDashboard from './pages/ArchitectDashboard';
@@ -54,6 +55,8 @@ import ClientLayout from './components/client/ClientLayout';
 import ClientDashboardNew from './pages/client/ClientDashboard';
 // Architect imports
 import ArchitectLayout from './components/architect/ArchitectLayout';
+import ArchitectDashboardNew from './pages/architect/ArchitectDashboard';
+import RequestDetails from './pages/architect/RequestDetails';
 // Inspector imports
 import InspectorLayout from './components/inspector/InspectorLayout';
 import MyProjects from './pages/client/MyProjects';
@@ -180,7 +183,8 @@ export default function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<ArchitectDashboard />} />
+          <Route index element={<ArchitectDashboardNew />} />
+          <Route path="requests/:requestId" element={<RequestDetails />} />
         </Route>
         <Route
           path="/inspector"
@@ -199,7 +203,10 @@ export default function App() {
               <AdminDashboard />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="requests" element={<AdminRequests />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Link, useSearchParams } from 'react-router-dom';
-import { Users, Building2, MapPin, Calendar, DollarSign, User, Mail, Phone, FileText, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
+import { Users, Building2, MapPin, Calendar, DollarSign, User, Mail, Phone, FileText, CheckCircle, Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 
 export default function ArchitectServices() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get('projectId');
   
@@ -16,6 +17,8 @@ export default function ArchitectServices() {
   const [requestId, setRequestId] = useState<string | null>(null);
   const [project, setProject] = useState<any>(null);
   const [projectLoading, setProjectLoading] = useState(!!projectId);
+  const [userProjects, setUserProjects] = useState<any[]>([]);
+  const [showProjectSelection, setShowProjectSelection] = useState(false);
   
   const [formData, setFormData] = useState({
     serviceType: '',
@@ -31,6 +34,7 @@ export default function ArchitectServices() {
     preferredContact: 'email' as 'email' | 'phone' | 'whatsapp',
     existingDrawings: 'no' as 'yes' | 'no' | 'partial',
     additionalRequirements: '',
+    projectId: projectId || '',
   });
 
   // Load project if projectId is provided
@@ -39,6 +43,13 @@ export default function ArchitectServices() {
       loadProject();
     }
   }, [projectId, user]);
+
+  // Load user's projects for selection
+  useEffect(() => {
+    if (user && !projectId) {
+      loadUserProjects();
+    }
+  }, [user, projectId]);
 
   // Auto-populate form with project data
   useEffect(() => {
@@ -50,6 +61,7 @@ export default function ArchitectServices() {
         projectSize: project.area_sqft?.toString() || prev.projectSize,
         projectDescription: project.description || prev.projectDescription,
         budget: project.budget_max ? `${(project.budget_min / 100000).toFixed(0)}-${(project.budget_max / 100000).toFixed(0)} Lakhs` : prev.budget,
+        projectId: project.id,
       }));
     }
   }, [project]);
@@ -92,6 +104,33 @@ export default function ArchitectServices() {
     }
   };
 
+  const loadUserProjects = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('client_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        setUserProjects(data);
+      }
+    } catch (err) {
+      console.error('Error loading projects:', err);
+    }
+  };
+
+  const handleProjectSelect = (selectedProject: any) => {
+    setProject(selectedProject);
+    setFormData(prev => ({
+      ...prev,
+      projectId: selectedProject.id,
+    }));
+    setShowProjectSelection(false);
+  };
+
   const serviceTypes = [
     { value: 'architectural_design', label: 'Architectural Design' },
     { value: 'structural_design', label: 'Structural Design' },
@@ -127,7 +166,7 @@ export default function ArchitectServices() {
     }
 
     // Validate project ownership if projectId is provided
-    if (projectId && project && project.client_id !== user.id) {
+    if (formData.projectId && project && project.client_id !== user.id) {
       setError('You do not have access to this project.');
       setLoading(false);
       return;
@@ -150,11 +189,12 @@ export default function ArchitectServices() {
         existing_drawings: formData.existingDrawings,
         additional_requirements: formData.additionalRequirements || null,
         status: 'submitted',
+        request_source: formData.projectId ? 'project' : 'standalone',
       };
 
       // Add project_id if coming from a project
-      if (projectId) {
-        insertData.project_id = projectId;
+      if (formData.projectId) {
+        insertData.project_id = formData.projectId;
       }
 
       const { data, error: insertError } = await supabase
@@ -181,6 +221,17 @@ export default function ArchitectServices() {
       setLoading(false);
     }
   };
+
+  if (projectLoading) {
+    return (
+      <div className="p-6 lg:p-8 flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <Loader2 size={40} className="text-orange animate-spin mx-auto mb-4" />
+          <p className="text-text-muted">Loading project details...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (submitted) {
     return (
@@ -257,6 +308,7 @@ export default function ArchitectServices() {
                   preferredContact: 'email',
                   existingDrawings: 'no',
                   additionalRequirements: '',
+                  projectId: projectId || '',
                 });
               }}
               className="px-6 py-3 bg-orange text-white rounded-xl font-semibold hover:bg-orange-dark transition-colors"
@@ -277,13 +329,80 @@ export default function ArchitectServices() {
     );
   }
 
-  if (projectLoading) {
+  // Show project selection if no project and user has projects
+  if (!projectId && userProjects.length > 0 && !showProjectSelection) {
     return (
-      <div className="p-6 lg:p-8 flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <Loader2 size={40} className="text-orange animate-spin mx-auto mb-4" />
-          <p className="text-text-muted">Loading project details...</p>
-        </div>
+      <div className="p-6 lg:p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-4xl mx-auto"
+        >
+          <div className="bg-white rounded-2xl border border-border p-8">
+            <h2 className="text-2xl font-bold text-navy mb-4">Architect / Engineer Assistance</h2>
+            <p className="text-text-muted mb-6">
+              You have existing projects. Would you like to request architect services for an existing project or start a new one?
+            </p>
+            
+            <div className="space-y-4 mb-6">
+              <button
+                onClick={() => setShowProjectSelection(true)}
+                className="w-full p-4 bg-blue-50 border border-blue-200 rounded-xl text-left hover:bg-blue-100 transition-colors"
+              >
+                <h3 className="font-semibold text-navy mb-2">Select Existing Project</h3>
+                <p className="text-sm text-text-muted">Link this request to one of your existing projects</p>
+              </button>
+              
+              <Link
+                to="/client/projects/new"
+                className="block w-full p-4 bg-orange-50 border border-orange-200 rounded-xl hover:bg-orange-100 transition-colors"
+              >
+                <h3 className="font-semibold text-navy mb-2">Start New Project</h3>
+                <p className="text-sm text-text-muted">Create a new project first, then request architect services</p>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Show project selection modal
+  if (showProjectSelection) {
+    return (
+      <div className="p-6 lg:p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-4xl mx-auto"
+        >
+          <div className="bg-white rounded-2xl border border-border p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-navy">Select Project</h2>
+              <button
+                onClick={() => setShowProjectSelection(false)}
+                className="text-text-muted hover:text-navy transition-colors"
+              >
+                ← Back
+              </button>
+            </div>
+            
+            <div className="space-y-3">
+              {userProjects.map((proj) => (
+                <button
+                  key={proj.id}
+                  onClick={() => handleProjectSelect(proj)}
+                  className="w-full p-4 bg-bg-alt border border-border rounded-xl text-left hover:border-blue-500 hover:bg-blue-50 transition-colors"
+                >
+                  <h3 className="font-semibold text-navy mb-1">{proj.title}</h3>
+                  <p className="text-sm text-text-muted">
+                    {proj.location} • {proj.project_type} • {proj.area_sqft} sq.ft.
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </div>
     );
   }
@@ -295,7 +414,15 @@ export default function ArchitectServices() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-3xl font-bold text-navy">Architect / Engineer Services</h1>
+        <div className="flex items-center gap-3 mb-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="text-text-muted hover:text-navy transition-colors"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <h1 className="text-3xl font-bold text-navy">Architect / Engineer Services</h1>
+        </div>
         <p className="text-text-muted mt-1">Request professional architectural and engineering services</p>
       </motion.div>
 
