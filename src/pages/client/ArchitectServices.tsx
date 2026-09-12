@@ -1,15 +1,21 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Users, Building2, MapPin, Calendar, DollarSign, User, Mail, Phone, FileText, CheckCircle, Loader2 } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Users, Building2, MapPin, Calendar, DollarSign, User, Mail, Phone, FileText, CheckCircle, Loader2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 
 export default function ArchitectServices() {
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const projectId = searchParams.get('projectId');
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [requestId, setRequestId] = useState<string | null>(null);
+  const [project, setProject] = useState<any>(null);
+  const [projectLoading, setProjectLoading] = useState(!!projectId);
   
   const [formData, setFormData] = useState({
     serviceType: '',
@@ -27,6 +33,27 @@ export default function ArchitectServices() {
     additionalRequirements: '',
   });
 
+  // Load project if projectId is provided
+  useEffect(() => {
+    if (projectId && user) {
+      loadProject();
+    }
+  }, [projectId, user]);
+
+  // Auto-populate form with project data
+  useEffect(() => {
+    if (project) {
+      setFormData(prev => ({
+        ...prev,
+        projectType: project.project_type || prev.projectType,
+        projectLocation: project.location || prev.projectLocation,
+        projectSize: project.area_sqft?.toString() || prev.projectSize,
+        projectDescription: project.description || prev.projectDescription,
+        budget: project.budget_max ? `${(project.budget_min / 100000).toFixed(0)}-${(project.budget_max / 100000).toFixed(0)} Lakhs` : prev.budget,
+      }));
+    }
+  }, [project]);
+
   useEffect(() => {
     if (user) {
       setFormData(prev => ({
@@ -36,6 +63,34 @@ export default function ArchitectServices() {
       }));
     }
   }, [user]);
+
+  const loadProject = async () => {
+    if (!projectId || !user) return;
+    
+    setProjectLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('id', projectId)
+        .eq('client_id', user.id) // Ensure project belongs to authenticated client
+        .single();
+
+      if (error) {
+        console.error('Error loading project:', error);
+        setError('Project not found or you do not have access to this project.');
+        setProjectLoading(false);
+        return;
+      }
+
+      setProject(data);
+      setProjectLoading(false);
+    } catch (err) {
+      console.error('Error loading project:', err);
+      setError('Failed to load project details.');
+      setProjectLoading(false);
+    }
+  };
 
   const serviceTypes = [
     { value: 'architectural_design', label: 'Architectural Design' },
@@ -71,26 +126,40 @@ export default function ArchitectServices() {
       return;
     }
 
+    // Validate project ownership if projectId is provided
+    if (projectId && project && project.client_id !== user.id) {
+      setError('You do not have access to this project.');
+      setLoading(false);
+      return;
+    }
+
     try {
+      const insertData: any = {
+        client_id: user.id,
+        service_type: formData.serviceType,
+        project_type: formData.projectType,
+        project_location: formData.projectLocation,
+        project_size: formData.projectSize ? parseInt(formData.projectSize) : null,
+        project_description: formData.projectDescription,
+        timeline: formData.timeline || null,
+        budget: formData.budget || null,
+        full_name: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        preferred_contact: formData.preferredContact,
+        existing_drawings: formData.existingDrawings,
+        additional_requirements: formData.additionalRequirements || null,
+        status: 'submitted',
+      };
+
+      // Add project_id if coming from a project
+      if (projectId) {
+        insertData.project_id = projectId;
+      }
+
       const { data, error: insertError } = await supabase
         .from('architect_service_requests')
-        .insert({
-          client_id: user.id,
-          service_type: formData.serviceType,
-          project_type: formData.projectType,
-          project_location: formData.projectLocation,
-          project_size: formData.projectSize ? parseInt(formData.projectSize) : null,
-          project_description: formData.projectDescription,
-          timeline: formData.timeline || null,
-          budget: formData.budget || null,
-          full_name: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          preferred_contact: formData.preferredContact,
-          existing_drawings: formData.existingDrawings,
-          additional_requirements: formData.additionalRequirements || null,
-          status: 'submitted',
-        })
+        .insert(insertData)
         .select()
         .single();
 
@@ -125,13 +194,28 @@ export default function ArchitectServices() {
             <CheckCircle size={40} className="text-green" />
           </div>
           <h2 className="text-2xl font-bold text-navy mb-4">Request Submitted Successfully!</h2>
+          
+          {/* Show project info if linked */}
+          {project && (
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4 text-left">
+              <p className="text-sm text-blue-900">
+                <span className="font-semibold">Project:</span> {project.title}
+              </p>
+            </div>
+          )}
+          
           {requestId && (
             <p className="text-sm text-text-muted mb-4">
               Request ID: <span className="font-mono font-semibold">{requestId}</span>
             </p>
           )}
+          
+          <p className="text-sm font-semibold text-green mb-2">Status: Submitted</p>
           <p className="text-text-muted mb-6">
-            Thank you for submitting your service request. Our team will review your requirements and connect you with suitable architects/engineers.
+            {project 
+              ? "Your request is linked to this project. We'll review your requirements and connect you with suitable professionals."
+              : "Thank you for submitting your service request. Our team will review your requirements and connect you with suitable architects/engineers."
+            }
           </p>
           <div className="bg-bg-alt rounded-xl p-6 text-left mb-6">
             <h3 className="font-semibold text-navy mb-3">What happens next?</h3>
@@ -154,31 +238,52 @@ export default function ArchitectServices() {
               </li>
             </ul>
           </div>
-          <button
-            onClick={() => {
-              setSubmitted(false);
-              setRequestId(null);
-              setFormData({
-                serviceType: '',
-                projectType: '',
-                projectLocation: '',
-                projectSize: '',
-                projectDescription: '',
-                timeline: '',
-                budget: '',
-                fullName: user?.full_name || '',
-                email: user?.email || '',
-                phone: '',
-                preferredContact: 'email',
-                existingDrawings: 'no',
-                additionalRequirements: '',
-              });
-            }}
-            className="px-6 py-3 bg-orange text-white rounded-xl font-semibold hover:bg-orange-dark transition-colors"
-          >
-            Submit Another Request
-          </button>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={() => {
+                setSubmitted(false);
+                setRequestId(null);
+                setFormData({
+                  serviceType: '',
+                  projectType: '',
+                  projectLocation: '',
+                  projectSize: '',
+                  projectDescription: '',
+                  timeline: '',
+                  budget: '',
+                  fullName: user?.full_name || '',
+                  email: user?.email || '',
+                  phone: '',
+                  preferredContact: 'email',
+                  existingDrawings: 'no',
+                  additionalRequirements: '',
+                });
+              }}
+              className="px-6 py-3 bg-orange text-white rounded-xl font-semibold hover:bg-orange-dark transition-colors"
+            >
+              Submit Another Request
+            </button>
+            {project && (
+              <Link
+                to={`/client/projects/${project.id}`}
+                className="px-6 py-3 bg-navy text-white rounded-xl font-semibold hover:bg-navy-light transition-colors"
+              >
+                Back to Project
+              </Link>
+            )}
+          </div>
         </motion.div>
+      </div>
+    );
+  }
+
+  if (projectLoading) {
+    return (
+      <div className="p-6 lg:p-8 flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <Loader2 size={40} className="text-orange animate-spin mx-auto mb-4" />
+          <p className="text-text-muted">Loading project details...</p>
+        </div>
       </div>
     );
   }
@@ -193,6 +298,30 @@ export default function ArchitectServices() {
         <h1 className="text-3xl font-bold text-navy">Architect / Engineer Services</h1>
         <p className="text-text-muted mt-1">Request professional architectural and engineering services</p>
       </motion.div>
+
+      {/* Project Context Banner */}
+      {project && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 bg-blue-50 border border-blue-200 rounded-xl p-4"
+        >
+          <div className="flex items-start gap-3">
+            <Building2 size={20} className="text-blue-600 mt-0.5" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-blue-900">
+                Architect / Engineer assistance for:
+              </p>
+              <p className="text-base font-bold text-blue-900 mt-1">
+                {project.title}
+              </p>
+              <p className="text-sm text-blue-700 mt-1">
+                {project.location} • {project.project_type}
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Services Information */}
