@@ -35,7 +35,21 @@ export class AuthError extends Error {
       status: error.status,
       name: error.name,
       code: error.code,
+      details: error.details,
+      hint: error.hint,
     });
+
+    // CRITICAL: Database table not found error
+    if (error.code === '42P01' || 
+        error.message?.includes('Could not find the table') ||
+        error.message?.includes('relation') && error.message?.includes('does not exist')) {
+      console.error('[Auth] DATABASE SCHEMA ERROR: Required table is missing!');
+      return new AuthError(
+        'Database setup incomplete. Please contact support or run the database migration.',
+        'DATABASE_SCHEMA_ERROR',
+        'The required database table does not exist. Run migration: supabase/migrations/004_ensure_users_table_with_rls.sql'
+      );
+    }
 
     // Network/fetch errors
     if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
@@ -112,21 +126,22 @@ export class AuthError extends Error {
     if (error.code === '23503') {
       return new AuthError('Related record not found. Please try again.', 'FOREIGN_KEY_VIOLATION');
     }
-  if (error.code === 'PGRST301' || error.message?.includes('policy')) {
+    
+    if (error.code === 'PGRST301' || error.message?.includes('policy')) {
+      return new AuthError(
+        'Permission denied. Please contact support if this persists.',
+        'RLS_POLICY_DENIED',
+        error.message
+      );
+    }
+
+    // Default error
     return new AuthError(
-      'Permission denied. Please contact support if this persists.',
-      'RLS_POLICY_DENIED',
-      error.message
+      error.message || 'An unexpected error occurred. Please try again.',
+      'UNKNOWN_ERROR',
+      error.stack
     );
   }
-
-  // Default error
-  return new AuthError(
-    error.message || 'An unexpected error occurred. Please try again.',
-    'UNKNOWN_ERROR',
-    error.stack
-  );
-}
 
 export const authService = {
   /**
