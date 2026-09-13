@@ -3,9 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
-import { ArrowLeft, MapPin, Calendar, DollarSign, FileText, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, DollarSign, FileText, CheckCircle, XCircle, Loader2, AlertCircle } from 'lucide-react';
 
-export default function RequestDetails() {
+export default function ClientRequestDetails() {
   const { requestId } = useParams<{ requestId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -13,13 +13,6 @@ export default function RequestDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
-  const [showProposalModal, setShowProposalModal] = useState(false);
-  const [proposalForm, setProposalForm] = useState({
-    proposal_details: '',
-    proposal_amount: '',
-    proposal_timeline: '',
-  });
-  const [submittingProposal, setSubmittingProposal] = useState(false);
 
   useEffect(() => {
     if (requestId) {
@@ -43,9 +36,15 @@ export default function RequestDetails() {
             project_type,
             area_sqft,
             description
+          ),
+          users:assigned_architect_id (
+            id,
+            full_name,
+            email
           )
         `)
         .eq('id', requestId)
+        .eq('client_id', user?.id)
         .single();
 
       if (error) {
@@ -63,7 +62,7 @@ export default function RequestDetails() {
     }
   };
 
-  const handleStatusUpdate = async (newStatus: string) => {
+  const handleAcceptProposal = async () => {
     if (!requestId || !user) return;
     
     setUpdating(true);
@@ -71,83 +70,55 @@ export default function RequestDetails() {
       const { error } = await supabase
         .from('architect_service_requests')
         .update({ 
-          status: newStatus,
+          status: 'accepted',
           updated_at: new Date().toISOString()
         })
         .eq('id', requestId)
-        .eq('assigned_architect_id', user.id);
+        .eq('client_id', user.id)
+        .eq('status', 'client_review'); // Only allow if status is 'client_review'
 
       if (error) {
-        console.error('Error updating status:', error);
-        setError('Failed to update status');
+        console.error('Error accepting proposal:', error);
+        setError('Failed to accept proposal');
         return;
       }
 
       await loadRequest();
     } catch (err) {
       console.error('Error:', err);
-      setError('Failed to update status');
+      setError('Failed to accept proposal');
     } finally {
       setUpdating(false);
     }
   };
 
-  const handleSubmitProposal = async () => {
+  const handleDeclineProposal = async () => {
     if (!requestId || !user) return;
     
-    // Validate required fields
-    if (!proposalForm.proposal_details.trim()) {
-      setError('Please provide scope of work');
-      return;
-    }
-    if (!proposalForm.proposal_amount.trim()) {
-      setError('Please provide proposal amount');
-      return;
-    }
-    if (!proposalForm.proposal_timeline.trim()) {
-      setError('Please provide estimated timeline');
-      return;
-    }
-
-    setSubmittingProposal(true);
-    setError(null);
-    
+    setUpdating(true);
     try {
-      // Save proposal details and update status to proposal_sent
       const { error } = await supabase
         .from('architect_service_requests')
         .update({ 
-          proposal_details: proposalForm.proposal_details,
-          proposal_amount: proposalForm.proposal_amount,
-          proposal_timeline: proposalForm.proposal_timeline,
-          status: 'proposal_sent',
+          status: 'cancelled',
           updated_at: new Date().toISOString()
         })
         .eq('id', requestId)
-        .eq('assigned_architect_id', user.id)
-        .eq('status', 'matched'); // Only allow if status is 'matched'
+        .eq('client_id', user.id)
+        .eq('status', 'client_review'); // Only allow if status is 'client_review'
 
       if (error) {
-        console.error('Error submitting proposal:', error);
-        setError('Failed to submit proposal');
+        console.error('Error declining proposal:', error);
+        setError('Failed to decline proposal');
         return;
       }
 
-      // Close modal and reset form
-      setShowProposalModal(false);
-      setProposalForm({
-        proposal_details: '',
-        proposal_amount: '',
-        proposal_timeline: '',
-      });
-
-      // Reload request to show updated status
       await loadRequest();
     } catch (err) {
       console.error('Error:', err);
-      setError('Failed to submit proposal');
+      setError('Failed to decline proposal');
     } finally {
-      setSubmittingProposal(false);
+      setUpdating(false);
     }
   };
 
@@ -179,7 +150,7 @@ export default function RequestDetails() {
   };
 
   const getStatusLabel = (status: string) => {
-    return status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    return status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
   if (loading) {
@@ -201,7 +172,7 @@ export default function RequestDetails() {
           <h2 className="text-xl font-bold text-navy mb-2">Request Not Found</h2>
           <p className="text-text-muted mb-4">The requested service request could not be found.</p>
           <button
-            onClick={() => navigate('/architect')}
+            onClick={() => navigate('/client')}
             className="px-6 py-3 bg-orange text-white rounded-xl font-semibold hover:bg-orange-dark transition-colors"
           >
             Back to Dashboard
@@ -221,7 +192,7 @@ export default function RequestDetails() {
           className="mb-8"
         >
           <button
-            onClick={() => navigate('/architect')}
+            onClick={() => navigate('/client')}
             className="flex items-center gap-2 text-text-muted hover:text-navy transition-colors mb-4"
           >
             <ArrowLeft size={20} />
@@ -229,7 +200,7 @@ export default function RequestDetails() {
           </button>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-navy">Service Request Details</h1>
+              <h1 className="text-3xl font-bold text-navy">Architect Service Request</h1>
               <p className="text-text-muted mt-1">Request ID: {request.id}</p>
             </div>
             <span className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor(request.status)}`}>
@@ -254,33 +225,33 @@ export default function RequestDetails() {
                   <p className="text-xs text-text-muted mb-1">Project Title</p>
                   <p className="text-lg font-semibold text-navy">
                     {request.projects?.title || 'Project'}
-                  </p>
+                </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <p className="text-xs text-text-muted mb-1">Location</p>
-                    <p className="text-sm font-medium text-text flex items-center gap-1">
-                      <MapPin size={14} />
+                  <p className="text-xs text-text-muted mb-1">Location</p>
+                  <p className="text-sm font-medium text-text flex items-center gap-1">
+                    <MapPin size={14} />
                       {request.projects?.location || request.project_location}
-                    </p>
+                  </p>
                   </div>
                   <div>
-                    <p className="text-xs text-text-muted mb-1">Project Type</p>
-                    <p className="text-sm font-medium text-text capitalize">
+                  <p className="text-xs text-text-muted mb-1">Project Type</p>
+                  <p className="text-sm font-medium text-text capitalize">
                       {request.projects?.project_type || request.project_type}
-                    </p>
+                  </p>
                   </div>
                   {request.projects?.area_sqft && (
                     <div>
-                      <p className="text-xs text-text-muted mb-1">Area</p>
-                      <p className="text-sm font-medium text-text">{request.projects.area_sqft} sq.ft.</p>
+                  <p className="text-xs text-text-muted mb-1">Area</p>
+                  <p className="text-sm font-medium text-text">{request.projects.area_sqft} sq.ft.</p>
                     </div>
                   )}
                 </div>
                 {request.projects?.description && (
                   <div>
-                    <p className="text-xs text-text-muted mb-1">Description</p>
-                    <p className="text-sm text-text">{request.projects.description}</p>
+                  <p className="text-xs text-text-muted mb-1">Description</p>
+                  <p className="text-sm text-text">{request.projects.description}</p>
                   </div>
                 )}
               </div>
@@ -303,18 +274,18 @@ export default function RequestDetails() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-xs text-text-muted mb-1">Budget</p>
-                    <p className="text-sm font-medium text-text flex items-center gap-1">
-                      <DollarSign size={14} />
+                  <p className="text-xs text-text-muted mb-1">Budget</p>
+                  <p className="text-sm font-medium text-text flex items-center gap-1">
+                    <DollarSign size={14} />
                       {request.budget || 'Not specified'}
-                    </p>
+                  </p>
                   </div>
                   <div>
-                    <p className="text-xs text-text-muted mb-1">Timeline</p>
-                    <p className="text-sm font-medium text-text flex items-center gap-1">
-                      <Calendar size={14} />
+                  <p className="text-xs text-text-muted mb-1">Timeline</p>
+                  <p className="text-sm font-medium text-text flex items-center gap-1">
+                    <Calendar size={14} />
                       {request.timeline || 'Not specified'}
-                    </p>
+                  </p>
                   </div>
                 </div>
                 <div>
@@ -327,40 +298,64 @@ export default function RequestDetails() {
                 </div>
                 {request.additional_requirements && (
                   <div>
-                    <p className="text-xs text-text-muted mb-1">Additional Requirements</p>
-                    <p className="text-sm text-text">{request.additional_requirements}</p>
+                  <p className="text-xs text-text-muted mb-1">Additional Requirements</p>
+                  <p className="text-sm text-text">{request.additional_requirements}</p>
                   </div>
                 )}
               </div>
             </motion.div>
 
-            {/* Client Information */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white rounded-2xl border border-border p-6"
-            >
-              <h2 className="text-xl font-bold text-navy mb-4">Client Information</h2>
-              <div className="space-y-3">
-                <div>
+            {/* Architect Information */}
+            {request.assigned_architect_id && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="bg-white rounded-2xl border border-border p-6"
+              >
+                <h2 className="text-xl font-bold text-navy mb-4">Assigned Architect</h2>
+                <div className="space-y-3">
+                  <div>
                   <p className="text-xs text-text-muted mb-1">Name</p>
-                  <p className="text-sm font-medium text-text">{request.full_name}</p>
-                </div>
-                <div>
+                  <p className="text-sm font-medium text-text">{request.users?.full_name || 'Not assigned'}</p>
+                  </div>
+                  <div>
                   <p className="text-xs text-text-muted mb-1">Email</p>
-                  <p className="text-sm font-medium text-text">{request.email}</p>
+                  <p className="text-sm font-medium text-text">{request.users?.email || 'Not available'}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs text-text-muted mb-1">Phone</p>
-                  <p className="text-sm font-medium text-text">{request.phone}</p>
+              </motion.div>
+            )}
+
+            {/* Proposal Details */}
+            {['proposal_sent', 'client_review', 'accepted', 'in_progress', 'completed'].includes(request.status) && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="bg-white rounded-2xl border border-border p-6"
+              >
+                <h2 className="text-xl font-bold text-navy mb-4">Proposal Details</h2>
+                <div className="space-y-4">
+                  <div>
+                  <p className="text-xs text-text-muted mb-1">Scope of Work</p>
+                  <p className="text-sm text-text whitespace-pre-wrap">{request.proposal_details || 'Not provided'}</p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                  <p className="text-xs text-text-muted mb-1">Proposal Amount</p>
+                  <p className="text-sm font-medium text-text">
+                        {request.proposal_amount ? `₹${parseInt(request.proposal_amount).toLocaleString('en-IN')}` : 'Not provided'}
+                  </p>
+                    </div>
+                    <div>
+                  <p className="text-xs text-text-muted mb-1">Estimated Timeline</p>
+                  <p className="text-sm font-medium text-text">{request.proposal_timeline || 'Not provided'}</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs text-text-muted mb-1">Preferred Contact</p>
-                  <p className="text-sm font-medium text-text capitalize">{request.preferred_contact}</p>
-                </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            )}
           </div>
 
           {/* Sidebar */}
@@ -369,7 +364,7 @@ export default function RequestDetails() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.5 }}
               className="bg-white rounded-2xl border border-border p-6"
             >
               <h2 className="text-xl font-bold text-navy mb-4">Status & Actions</h2>
@@ -401,49 +396,49 @@ export default function RequestDetails() {
                   </p>
                 </div>
 
-                {/* Action Buttons - Architect Role Only */}
+                {/* Client Actions */}
                 <div className="pt-4 border-t border-border space-y-2">
-                  {/* Architect can only act on these statuses */}
-                  {request.status === 'matched' && (
-                    <button
-                      onClick={() => setShowProposalModal(true)}
-                      disabled={updating}
-                      className="w-full px-4 py-2.5 bg-orange text-white rounded-lg font-semibold hover:bg-orange-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      {updating ? <Loader2 size={16} className="animate-spin" /> : null}
-                      Prepare Proposal
-                    </button>
+                  {request.status === 'client_review' && (
+                    <>
+                      <button
+                        onClick={handleAcceptProposal}
+                        disabled={updating}
+                        className="w-full px-4 py-2.5 bg-green text-white rounded-lg font-semibold hover:bg-green-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        {updating ? <Loader2 size={16} className="animate-spin" /> : null}
+                        Accept Proposal
+                      </button>
+                      <button
+                        onClick={handleDeclineProposal}
+                        disabled={updating}
+                        className="w-full px-4 py-2.5 border border border-red-600 text-red-600 rounded-lg font-semibold hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        {updating ? <Loader2 size={16} className="animate-spin" /> : null}
+                        Decline Proposal
+                      </button>
+                    </>
                   )}
-                  {request.status === 'accepted' && (
-                    <button
-                      onClick={() => handleStatusUpdate('in_progress')}
-                      disabled={updating}
-                      className="w-full px-4 py-2.5 bg-blue text-white rounded-lg font-semibold hover:bg-blue-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      {updating ? <Loader2 size={16} className="animate-spin" /> : null}
-                      Start Work
-                    </button>
-                  )}
-                  {request.status === 'in_progress' && (
-                    <button
-                      onClick={() => handleStatusUpdate('completed')}
-                      disabled={updating}
-                      className="w-full px-4 py-2.5 bg-green text-white rounded-lg font-semibold hover:bg-green-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      {updating ? <Loader2 size={16} className="animate-spin" /> : null}
-                      Mark Work Completed
-                    </button>
-                  )}
-                  
+
                   {/* Show info message for other statuses */}
-                  {['submitted', 'under_review', 'matching', 'proposal_sent', 'client_review'].includes(request.status) && (
+                  {['submitted', 'under_review', 'matching', 'matched', 'proposal_sent'].includes(request.status) && (
                     <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
                       <p className="text-xs text-blue-900">
                         {request.status === 'submitted' && 'Request is pending admin review.'}
                         {request.status === 'under_review' && 'Request is being reviewed by admin.'}
                         {request.status === 'matching' && 'Admin is finding matching architects.'}
-                        {request.status === 'proposal_sent' && 'Proposal sent to client for review.'}
-                        {request.status === 'client_review' && 'Client is reviewing your proposal.'}
+                        {request.status === 'matched' && 'Architect has been assigned.'}
+                        {request.status === 'proposal_sent' && 'Waiting for architect to submit proposal.'}
+                      </p>
+                    </div>
+                  )}
+
+                  {['accepted', 'in_progress', 'completed', 'cancelled'].includes(request.status) && (
+                    <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                      <p className="text-xs text-gray-900">
+                        {request.status === 'accepted' && 'Proposal accepted. Work will begin soon.'}
+                        {request.status === 'in_progress' && 'Work is in progress.'}
+                        {request.status === 'completed' && 'Work has been completed.'}
+                        {request.status === 'cancelled' && 'Request has been cancelled.'}
                       </p>
                     </div>
                   )}
@@ -455,7 +450,7 @@ export default function RequestDetails() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.6 }}
               className="bg-white rounded-2xl border border-border p-6"
             >
               <h2 className="text-xl font-bold text-navy mb-4">Request Timeline</h2>
@@ -538,130 +533,8 @@ export default function RequestDetails() {
                 )}
               </div>
             </motion.div>
-
-            {/* Proposal Details */}
-            {['proposal_sent', 'client_review', 'accepted', 'in_progress', 'completed'].includes(request.status) && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="bg-white rounded-2xl border border-border p-6"
-              >
-                <h2 className="text-xl font-bold text-navy mb-4">Proposal Details</h2>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-xs text-text-muted mb-1">Scope of Work</p>
-                    <p className="text-sm text-text whitespace-pre-wrap">{request.proposal_details || 'Not provided'}</p>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-xs text-text-muted mb-1">Proposal Amount</p>
-                      <p className="text-sm font-medium text-text">
-                        {request.proposal_amount ? `₹${parseInt(request.proposal_amount).toLocaleString('en-IN')}` : 'Not provided'}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-xs text-text-muted mb-1">Estimated Timeline</p>
-                      <p className="text-sm font-medium text-text">{request.proposal_timeline || 'Not provided'}</p>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
           </div>
         </div>
-
-        {/* Proposal Modal */}
-        {showProposalModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-white rounded-2xl border border-border p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-navy">Prepare Proposal</h2>
-                <button
-                  onClick={() => setShowProposalModal(false)}
-                  className="text-text-muted hover:text-navy transition-colors"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {error && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <p className="text-sm text-red-900">{error}</p>
-                </div>
-              )}
-
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-text mb-2">
-                    Scope of Work *
-                  </label>
-                  <textarea
-                    value={proposalForm.proposal_details}
-                    onChange={(e) => setProposalForm({ ...proposalForm, proposal_details: e.target.value })}
-                    rows={6}
-                    className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange"
-                    placeholder="Describe the scope of work in detail..."
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-text mb-2">
-                      Proposal Amount (₹) *
-                    </label>
-                    <input
-                      type="number"
-                      value={proposalForm.proposal_amount}
-                      onChange={(e) => setProposalForm({ ...proposalForm, proposal_amount: e.target.value })}
-                      className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange"
-                      placeholder="e.g., 500000"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-text mb-2">
-                      Estimated Timeline *
-                    </label>
-                    <input
-                      type="text"
-                      value={proposalForm.proposal_timeline}
-                      onChange={(e) => setProposalForm({ ...proposalForm, proposal_timeline: e.target.value })}
-                      className="w-full px-4 py-3 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-orange/30 focus:border-orange"
-                      placeholder="e.g., 3 months"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-3 mt-6 pt-6 border-t border-border">
-                <button
-                  onClick={() => setShowProposalModal(false)}
-                  className="flex-1 px-4 py-2.5 border border-border text-text rounded-lg font-semibold hover:bg-bg transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmitProposal}
-                  disabled={submittingProposal}
-                  className="flex-1 px-4 py-2.5 bg-orange text-white rounded-lg font-semibold hover:bg-orange-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  {submittingProposal ? (
-                    <>
-                      <Loader2 size={16} className="animate-spin" />
-                      Submitting...
-                    </>
-                  ) : (
-                    'Submit Proposal'
-                  )}
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -76,6 +76,7 @@ import ReinspectionClient from './pages/client/Reinspection';
 import DocumentsClient from './pages/client/Documents';
 import PaymentsClient from './pages/client/Payments';
 import ArchitectServices from './pages/client/ArchitectServices';
+import ClientRequestDetails from './pages/client/ClientRequestDetails';
 import ConstructionFinance from './pages/client/ConstructionFinance';
 import NotificationsClient from './pages/client/Notifications';
 import MessagesClient from './pages/client/Messages';
@@ -169,6 +170,7 @@ export default function App() {
           <Route path="documents" element={<DocumentsClient />} />
           <Route path="payments" element={<PaymentsClient />} />
           <Route path="architect-services" element={<ArchitectServices />} />
+          <Route path="architect-requests/:requestId" element={<ClientRequestDetails />} />
           <Route path="finance" element={<ConstructionFinance />} />
           <Route path="notifications" element={<NotificationsClient />} />
           <Route path="messages" element={<MessagesClient />} />
