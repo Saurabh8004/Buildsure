@@ -27,7 +27,7 @@ export default function SignIn() {
     console.log('[AUTH] useEffect triggered - user:', user?.email, 'loading:', authLoading);
     
     if (user && !authLoading) {
-      const dashboardPath = user.role === 'admin' ? '/admin' : `/dashboard/${user.role}`;
+      const dashboardPath = user.role === 'admin' ? '/admin' : `/${user.role}`;
       console.log('[AUTH] Navigating to dashboard:', dashboardPath);
       navigate(dashboardPath, { replace: true });
     }

@@ -25,12 +25,63 @@ import CreateProject from './pages/CreateProject';
 import ProjectDetails from './pages/ProjectDetails';
 import ContractorProfile from './pages/ContractorProfile';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminRequests from './pages/admin/AdminRequests';
 import ContractorDashboard from './pages/ContractorDashboard';
 import ClientDashboard from './pages/ClientDashboard';
 import ArchitectDashboard from './pages/ArchitectDashboard';
 import InspectorDashboard from './pages/InspectorDashboard';
 import ConfigCheck from './pages/ConfigCheck';
 import ProtectedRoute from './components/ProtectedRoute';
+import ContractorLayout from './components/contractor/ContractorLayout';
+import ContractorDashboardNew from './pages/contractor/ContractorDashboard';
+import FindProjects from './pages/contractor/FindProjects';
+import MyBids from './pages/contractor/MyBids';
+import AwardedProjects from './pages/contractor/AwardedProjects';
+import ActiveProjects from './pages/contractor/ActiveProjects';
+import Progress from './pages/contractor/Progress';
+import Milestones from './pages/contractor/Milestones';
+import QAInspections from './pages/contractor/QAInspections';
+import QualityIssues from './pages/contractor/QualityIssues';
+import CorrectiveActions from './pages/contractor/CorrectiveActions';
+import Reinspection from './pages/contractor/Reinspection';
+import Documents from './pages/contractor/Documents';
+import Payments from './pages/contractor/Payments';
+import Notifications from './pages/contractor/Notifications';
+import Messages from './pages/contractor/Messages';
+import ContractorProfileNew from './pages/contractor/ContractorProfile';
+import Settings from './pages/contractor/Settings';
+// Client imports
+import ClientLayout from './components/client/ClientLayout';
+import ClientDashboardNew from './pages/client/ClientDashboard';
+// Architect imports
+import ArchitectLayout from './components/architect/ArchitectLayout';
+import ArchitectDashboardNew from './pages/architect/ArchitectDashboard';
+import RequestDetails from './pages/architect/RequestDetails';
+// Inspector imports
+import InspectorLayout from './components/inspector/InspectorLayout';
+import MyProjects from './pages/client/MyProjects';
+import PostProject from './pages/client/PostProject';
+import BidsReceived from './pages/client/BidsReceived';
+import CompareBids from './pages/client/CompareBids';
+import BidDetails from './pages/client/BidDetails';
+import ContractorSelection from './pages/client/ContractorSelection';
+import ContractAward from './pages/client/ContractAward';
+import TenderManagement from './pages/client/TenderManagement';
+import ProgressClient from './pages/client/Progress';
+import MilestonesClient from './pages/client/Milestones';
+import QAInspectionsClient from './pages/client/QAInspections';
+import QualityIssuesClient from './pages/client/QualityIssues';
+import CorrectiveActionsClient from './pages/client/CorrectiveActions';
+import ReinspectionClient from './pages/client/Reinspection';
+import DocumentsClient from './pages/client/Documents';
+import PaymentsClient from './pages/client/Payments';
+import ArchitectServices from './pages/client/ArchitectServices';
+import ClientRequestDetails from './pages/client/ClientRequestDetails';
+import ConstructionFinance from './pages/client/ConstructionFinance';
+import NotificationsClient from './pages/client/Notifications';
+import MessagesClient from './pages/client/Messages';
+import ClientProfileNew from './pages/client/ClientProfile';
+import SettingsClient from './pages/client/Settings';
 
 export default function App() {
   return (
@@ -65,39 +116,88 @@ export default function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/config-check" element={<ConfigCheck />} />
         
-        {/* Dashboard Routes */}
+        {/* Role-Based Dashboard Routes */}
         <Route
-          path="/dashboard/contractor"
+          path="/contractor"
           element={
             <ProtectedRoute requiredRole="contractor">
-              <ContractorDashboard />
+              <ContractorLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<ContractorDashboardNew />} />
+          <Route path="projects" element={<FindProjects />} />
+          <Route path="bids" element={<MyBids />} />
+          <Route path="awarded-projects" element={<AwardedProjects />} />
+          <Route path="active-projects" element={<ActiveProjects />} />
+          <Route path="progress" element={<Progress />} />
+          <Route path="milestones" element={<Milestones />} />
+          <Route path="qa" element={<QAInspections />} />
+          <Route path="quality-issues" element={<QualityIssues />} />
+          <Route path="corrective-actions" element={<CorrectiveActions />} />
+          <Route path="reinspection" element={<Reinspection />} />
+          <Route path="documents" element={<Documents />} />
+          <Route path="payments" element={<Payments />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="profile" element={<ContractorProfileNew />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
         <Route
-          path="/dashboard/client"
+          path="/client"
           element={
             <ProtectedRoute requiredRole="client">
-              <ClientDashboard />
+              <ClientLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<ClientDashboardNew />} />
+          <Route path="projects" element={<MyProjects />} />
+          <Route path="projects/new" element={<PostProject />} />
+          <Route path="projects/:projectId/tenders" element={<TenderManagement />} />
+          <Route path="tenders/:tenderId/compare" element={<CompareBids />} />
+          <Route path="bids/:bidId" element={<BidDetails />} />
+          <Route path="bids/:bidId/select" element={<ContractorSelection />} />
+          <Route path="bids/:bidId/award" element={<ContractAward />} />
+          <Route path="bids" element={<BidsReceived />} />
+          <Route path="compare" element={<CompareBids />} />
+          <Route path="progress" element={<ProgressClient />} />
+          <Route path="milestones" element={<MilestonesClient />} />
+          <Route path="qa" element={<QAInspectionsClient />} />
+          <Route path="quality-issues" element={<QualityIssuesClient />} />
+          <Route path="corrective-actions" element={<CorrectiveActionsClient />} />
+          <Route path="reinspection" element={<ReinspectionClient />} />
+          <Route path="documents" element={<DocumentsClient />} />
+          <Route path="payments" element={<PaymentsClient />} />
+          <Route path="architect-services" element={<ArchitectServices />} />
+          <Route path="architect-requests/:requestId" element={<ClientRequestDetails />} />
+          <Route path="finance" element={<ConstructionFinance />} />
+          <Route path="notifications" element={<NotificationsClient />} />
+          <Route path="messages" element={<MessagesClient />} />
+          <Route path="profile" element={<ClientProfileNew />} />
+          <Route path="settings" element={<SettingsClient />} />
+        </Route>
         <Route
-          path="/dashboard/architect"
+          path="/architect"
           element={
             <ProtectedRoute requiredRole="architect">
-              <ArchitectDashboard />
+              <ArchitectLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<ArchitectDashboardNew />} />
+          <Route path="requests/:requestId" element={<RequestDetails />} />
+        </Route>
         <Route
-          path="/dashboard/inspector"
+          path="/inspector"
           element={
             <ProtectedRoute requiredRole="inspector">
-              <InspectorDashboard />
+              <InspectorLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<InspectorDashboard />} />
+        </Route>
         <Route
           path="/admin"
           element={
@@ -105,7 +205,10 @@ export default function App() {
               <AdminDashboard />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="requests" element={<AdminRequests />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
