@@ -1,22 +1,51 @@
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Shield, TrendingUp, Users, Clock, CheckCircle, Building2, FileText, Award, Eye } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { ArrowRight, Shield, TrendingUp, Users, Clock, CheckCircle, Building2, FileText, Award, Eye, Home as HomeIcon, Building, Hammer, Ruler } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
 
 export default function Home() {
   const { scrollYProgress } = useScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.15], [1, 0.98]);
+  const [selectedBuildType, setSelectedBuildType] = useState<string | null>(null);
+  const buildProgressRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: buildScrollProgress } = useScroll({
+    target: buildProgressRef,
+    offset: ["start end", "end start"]
+  });
+
+  const buildTypes = [
+    { id: 'home', label: 'HOME', icon: HomeIcon, description: 'Your home starts here.' },
+    { id: 'commercial', label: 'COMMERCIAL', icon: Building, description: 'Build your business space.' },
+    { id: 'renovation', label: 'RENOVATION', icon: Hammer, description: 'Transform your existing space.' },
+    { id: 'plan', label: 'I HAVE A PLAN', icon: Ruler, description: 'Let\'s bring your vision to life.' },
+  ];
+
+  const buildStages = [
+    { id: 1, label: 'IDEA', description: 'Your vision begins' },
+    { id: 2, label: 'REQUIREMENT', description: 'Define your needs' },
+    { id: 3, label: 'VERIFIED', description: 'We verify your needs' },
+    { id: 4, label: 'COMPETITIVE BIDS', description: 'Get competitive bids' },
+    { id: 5, label: 'CONTRACTOR SELECTED', description: 'Choose your contractor' },
+    { id: 6, label: 'BUILD', description: 'Construction begins' },
+    { id: 7, label: 'QUALITY INSPECTION', description: 'Quality is monitored' },
+    { id: 8, label: 'ISSUE RESOLVED', description: 'Issues are corrected' },
+    { id: 9, label: 'REINSPECTION', description: 'Reinspection complete' },
+    { id: 10, label: 'HANDOVER', description: 'Project complete' },
+  ];
+
+  const buildProgress = useTransform(buildScrollProgress, [0, 1], [0, 10]);
+  const currentStage = Math.floor(buildProgress.get());
 
   return (
     <div className="overflow-hidden">
-      {/* Cinematic Hero */}
+      {/* Cinematic Hero with Animated SVG Construction */}
       <motion.section
-      style={{ opacity: heroOpacity, scale: heroScale }}
-        className="relative min-h-screen flex items-center bg-navy overflow-hidden"
+        style={{ opacity: heroOpacity, scale: heroScale }}
+        className="relative min-h-screen flex items-center bg-gradient-to-br from-navy via-navy to-navy-light overflow-hidden"
       >
         {/* Animated Blueprint Grid */}
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-[0.03]">
           <motion.div
             animate={{
               backgroundPosition: ['0 0', '40px 40px'],
@@ -37,35 +66,64 @@ export default function Home() {
           />
         </div>
 
-        {/* Floating Construction Geometry */}
+        {/* Animated Construction SVG */}
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.svg
+            viewBox="0 0 1200 800"
+            className="absolute inset-0 w-full h-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.15 }}
+            transition={{ duration: 1.5, delay: 0.5 }}
+          >
+            {/* Blueprint Building Outline */}
+            <motion.path
+              d="M400 600 L400 300 L600 200 L800 300 L800 600"
+              stroke="#F28C28"
+              strokeWidth="2"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 3, delay: 0.5, ease: 'easeInOut' }}
+            />
+            <motion.path
+              d="M500 600 L500 400 L700 400 L700 600"
+              stroke="#168C87"
+              strokeWidth="2"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 2.5, delay: 1, ease: 'easeInOut' }}
+            />
+            {/* Measurement lines */}
+            <motion.path
+              d="M380 600 L380 300 M370 300 L390 300 M370 600 L390 600"
+              stroke="#F28C28"
+              strokeWidth="1"
+              strokeDasharray="4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              transition={{ duration: 1, delay: 2 }}
+            />
+          </motion.svg>
+        </div>
+
+        {/* Floating Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
             animate={{
               y: [0, -20, 0],
               rotate: [0, 5, 0],
             }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-            className="absolute top-20 right-20 w-64 h-64 opacity-20"
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute top-20 right-20 w-64 h-64 opacity-10"
           >
-            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M40 160 L40 80 L100 50 L160 80 L160 160"
-                stroke="#F28C28"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M70 160 L70 100 L130 100 L130 160"
-                stroke="#168C87"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+            <svg viewBox="0 0 200 200" fill="none">
+              <path d="M40 160 L40 80 L100 50 L160 80 L160 160" stroke="#F28C28" strokeWidth="2" />
+              <path d="M70 160 L70 100 L130 100 L130 160" stroke="#168C87" strokeWidth="2" />
             </svg>
           </motion.div>
         </div>
@@ -79,6 +137,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
+                <p className="text-orange text-sm font-semibold tracking-wider mb-4">CONSTRUCTION, REIMAGINED</p>
                 <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.1]">
                   <motion.span
                     initial={{ opacity: 0, y: 20 }}
@@ -94,7 +153,7 @@ export default function Home() {
                     transition={{ duration: 0.6, delay: 0.5 }}
                     className="text-orange"
                   >
-                    CONNECT SMARTER.
+                    BUILD WITH CONFIDENCE.
                   </motion.span>
                 </h1>
               </motion.div>
