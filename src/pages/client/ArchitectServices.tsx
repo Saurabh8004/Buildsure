@@ -173,6 +173,14 @@ export default function ArchitectServices() {
     }
 
     try {
+      // Determine request_source based on context
+      let requestSource = 'standalone';
+      if (formData.projectId) {
+        requestSource = 'project';
+      } else if (userProjects.length === 0) {
+        requestSource = 'onboarding';
+      }
+
       const insertData: any = {
         client_id: user.id,
         service_type: formData.serviceType,
@@ -189,7 +197,7 @@ export default function ArchitectServices() {
         existing_drawings: formData.existingDrawings,
         additional_requirements: formData.additionalRequirements || null,
         status: 'submitted',
-        request_source: formData.projectId ? 'project' : 'standalone',
+        request_source: requestSource,
       };
 
       // Add project_id if coming from a project
@@ -360,6 +368,55 @@ export default function ArchitectServices() {
                 <h3 className="font-semibold text-navy mb-2">Start New Project</h3>
                 <p className="text-sm text-text-muted">Create a new project first, then request architect services</p>
               </Link>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Show onboarding message if no project and user has NO projects
+  if (!projectId && userProjects.length === 0) {
+    return (
+      <div className="p-6 lg:p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-4xl mx-auto"
+        >
+          <div className="bg-white rounded-2xl border border-border p-8">
+            <h2 className="text-2xl font-bold text-navy mb-4">Need Help Getting Started?</h2>
+            <p className="text-text-muted mb-6">
+              You don't have any projects yet. You can either create a project first, or request architect assistance to help you get started with your construction journey.
+            </p>
+            
+            <div className="space-y-4 mb-6">
+              <Link
+                to="/client/projects/new"
+                className="block w-full p-4 bg-orange-50 border border-orange-200 rounded-xl hover:bg-orange-100 transition-colors"
+              >
+                <h3 className="font-semibold text-navy mb-2">Start New Project</h3>
+                <p className="text-sm text-text-muted">Create a new project first, then request architect services</p>
+              </Link>
+              
+              <button
+                onClick={() => {
+                  // Set request_source to 'onboarding' and proceed with form
+                  setFormData(prev => ({
+                    ...prev,
+                    projectId: '', // No project yet
+                  }));
+                  // Continue to form
+                  setShowProjectSelection(false);
+                }}
+                className="w-full p-4 bg-blue-50 border border-blue-200 rounded-xl text-left hover:bg-blue-100 transition-colors"
+              >
+                <h3 className="font-semibold text-navy mb-2">Talk to an Architect First</h3>
+                <p className="text-sm text-text-muted">Request architect assistance to help you plan your project</p>
+                <p className="text-xs text-text-muted mt-2 italic">
+                  Your architect request will be connected to your project once your project is created.
+                </p>
+              </button>
             </div>
           </div>
         </motion.div>

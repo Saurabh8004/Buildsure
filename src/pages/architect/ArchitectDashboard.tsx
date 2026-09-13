@@ -59,11 +59,13 @@ export default function ArchitectDashboard() {
         return 'bg-blue-100 text-blue-700';
       case 'under_review':
         return 'bg-orange-100 text-orange-700';
-      case 'matched':
+      case 'matching':
         return 'bg-purple-100 text-purple-700';
-      case 'proposals_received':
+      case 'matched':
         return 'bg-indigo-100 text-indigo-700';
-      case 'client_selected':
+      case 'proposal_sent':
+        return 'bg-indigo-100 text-indigo-700';
+      case 'client_review':
         return 'bg-teal-100 text-teal-700';
       case 'accepted':
         return 'bg-green-100 text-green-700';

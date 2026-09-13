@@ -314,12 +314,19 @@ export default function ProjectDetails() {
                       </p>
                     </div>
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      request.status === 'submitted' ? 'bg-blue-100 text-blue-700' :
-                      request.status === 'under_review' ? 'bg-orange-100 text-orange-700' :
-                      request.status === 'matched' ? 'bg-green-100 text-green-700' :
-                      'bg-gray-100 text-gray-700'
-                    }`}>
-                      {request.status.replace('_', ' ').toUpperCase()}
+        request.status === 'submitted' ? 'bg-blue-100 text-blue-700' :
+        request.status === 'under_review' ? 'bg-orange-100 text-orange-700' :
+        request.status === 'matching' ? 'bg-purple-100 text-purple-700' :
+        request.status === 'matched' ? 'bg-indigo-100 text-indigo-700' :
+        request.status === 'proposal_sent' ? 'bg-indigo-100 text-indigo-700' :
+        request.status === 'client_review' ? 'bg-teal-100 text-teal-700' :
+        request.status === 'accepted' ? 'bg-green-100 text-green-700' :
+        request.status === 'in_progress' ? 'bg-cyan-100 text-cyan-700' :
+        request.status === 'completed' ? 'bg-green-100 text-green-700' :
+        request.status === 'cancelled' ? 'bg-gray-100 text-gray-700' :
+        'bg-gray-100 text-gray-700'
+      }`}>
+                      {request.status.replace(/_/g, ' ').toUpperCase()}
                     </span>
                   </div>
                   <div className="mt-2 text-sm text-text-muted">

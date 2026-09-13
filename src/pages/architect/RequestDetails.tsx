@@ -91,11 +91,13 @@ export default function RequestDetails() {
         return 'bg-blue-100 text-blue-700';
       case 'under_review':
         return 'bg-orange-100 text-orange-700';
-      case 'matched':
+      case 'matching':
         return 'bg-purple-100 text-purple-700';
-      case 'proposals_received':
+      case 'matched':
         return 'bg-indigo-100 text-indigo-700';
-      case 'client_selected':
+      case 'proposal_sent':
+        return 'bg-indigo-100 text-indigo-700';
+      case 'client_review':
         return 'bg-teal-100 text-teal-700';
       case 'accepted':
         return 'bg-green-100 text-green-700';
@@ -347,7 +349,27 @@ export default function RequestDetails() {
                   )}
                   {request.status === 'under_review' && (
                     <button
-                      onClick={() => handleStatusUpdate('proposals_received')}
+                      onClick={() => handleStatusUpdate('matching')}
+                      disabled={updating}
+                      className="w-full px-4 py-2.5 bg-orange text-white rounded-lg font-semibold hover:bg-orange-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {updating ? <Loader2 size={16} className="animate-spin" /> : null}
+                      Find Matching Architects
+                    </button>
+                  )}
+                  {request.status === 'matching' && (
+                    <button
+                      onClick={() => handleStatusUpdate('matched')}
+                      disabled={updating}
+                      className="w-full px-4 py-2.5 bg-orange text-white rounded-lg font-semibold hover:bg-orange-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {updating ? <Loader2 size={16} className="animate-spin" /> : null}
+                      Architect Matched
+                    </button>
+                  )}
+                  {request.status === 'matched' && (
+                    <button
+                      onClick={() => handleStatusUpdate('proposal_sent')}
                       disabled={updating}
                       className="w-full px-4 py-2.5 bg-orange text-white rounded-lg font-semibold hover:bg-orange-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
@@ -355,14 +377,24 @@ export default function RequestDetails() {
                       Submit Proposal
                     </button>
                   )}
-                  {request.status === 'proposals_received' && (
+                  {request.status === 'proposal_sent' && (
+                    <button
+                      onClick={() => handleStatusUpdate('client_review')}
+                      disabled={updating}
+                      className="w-full px-4 py-2.5 bg-orange text-white rounded-lg font-semibold hover:bg-orange-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {updating ? <Loader2 size={16} className="animate-spin" /> : null}
+                      Mark for Client Review
+                    </button>
+                  )}
+                  {request.status === 'client_review' && (
                     <button
                       onClick={() => handleStatusUpdate('accepted')}
                       disabled={updating}
                       className="w-full px-4 py-2.5 bg-green text-white rounded-lg font-semibold hover:bg-green-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {updating ? <Loader2 size={16} className="animate-spin" /> : null}
-                      Accept & Start Work
+                      Client Accepted - Start Work
                     </button>
                   )}
                   {request.status === 'accepted' && (
