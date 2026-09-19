@@ -24,7 +24,7 @@ export default function AnimatedHowItWorks() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl sm:text-4xl font-bold text-navy tracking-tight">
-            How BuildSure Works
+            How ConstructBid Works
           </h2>
           <p className="mt-4 text-text-muted max-w-2xl mx-auto">
             A structured process from project posting to quality-monitored completion.
